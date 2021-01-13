@@ -1,9 +1,9 @@
 const bcrypt = require('bcrypt')
-// const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken')
 const helper = require('../helper/helper')
 const {
   reqruiterRegisModel,
-  seekerRegisModel
+  seekerRegisModel, loginModel
 } = require('../model/user')
 
 module.exports = {
@@ -30,6 +30,7 @@ module.exports = {
         roles === null
       ) {
         console.log('All data must be filled in')
+        return helper.response(res, 400, 'All data must be filled in')
       } else {
         const setData = {
           username,
@@ -67,6 +68,7 @@ module.exports = {
         roles === null
       ) {
         console.log('All data must be filled in')
+        return helper.response(res, 400, 'All data must be filled in')
       } else {
         const setData = {
           username,
@@ -81,6 +83,40 @@ module.exports = {
     } catch (error) {
       console.log(error)
       return helper.response(res, 400, 'Bad Request', error)
+    }
+  },
+  login: async (request, response) => {
+    try {
+      const {
+        email_user,
+        user_password
+      } = request.body
+      const checkDataLogin = await loginModel(email_user)
+      if (checkDataLogin.length > 0) {
+        const checkPasssword = bcrypt.compareSync(user_password, checkDataLogin[0].user_password)
+        if (checkPasssword) {
+          const { id_user, email_user, roles, status_user } = checkDataLogin[0]
+          if (status_user === 'ON') {
+            const payload = {
+              id_user, email_user, roles, status_user
+            }
+            const token = jwt.sign(payload, process.env.ACCESS, { expiresIn: '1hr' })
+            const result = {
+              ...payload, token
+            }
+            return helper.response(response, 200, 'Successs Login!', result)
+          } else {
+            return helper.response(response, 400, "You haven't activated your account yet")
+          }
+        } else {
+          return helper.response(response, 400, 'Wrong Password!')
+        }
+      } else {
+        return helper.response(response, 400, "You haven't registered yet!")
+      }
+    } catch (error) {
+      console.log(error)
+      return helper.response(response, 400, 'Bad Request!', error)
     }
   }
 }

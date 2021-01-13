@@ -3,5 +3,5 @@ module.exports = {
   semi: false,
   singleQuote: true,
   trailingComma: 'none'
-  'space-before-function-paren': error,
 }
+// 'space-before-function-paren': error
