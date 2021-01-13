@@ -6,13 +6,15 @@ const connection = mysql.createConnection({
   user: process.env.USER,
   password: process.env.PASSWORD,
   database: process.env.DATABASE,
-  timezone: 'UTC'
+  timezone: process.env.TIMEZONE
 })
 
 connection.connect((error) => {
   if (error) {
     return `Turn on the database! ${error}`
   } else {
-    return 'You are now connected to database.'
+    console.log('You are now connected to database ...')
   }
 })
+
+module.exports = connection
