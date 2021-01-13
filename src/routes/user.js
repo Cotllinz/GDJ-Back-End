@@ -1,7 +1,8 @@
 const router = require('express').Router()
 
-const { reqruiterRegis } = require('../controller/user')
+const { reqruiterRegis, seekerRegis } = require('../controller/user')
 
-router.post('/regisreqruiter', reqruiterRegis)
+router.post('/reqruiterregis', reqruiterRegis)
+router.post('/seekerregis', seekerRegis)
 
 module.exports = router
