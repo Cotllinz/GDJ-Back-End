@@ -1,7 +1,12 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const helper = require('../helper/helper')
-const { seekerRegisModel, loginModel } = require('../model/user')
+const {
+  seekerRegisModel,
+  loginModel,
+  addRecruiterModel,
+  addPekerjaModel
+} = require('../model/user')
 const nodemailer = require('nodemailer')
 require('dotenv').config()
 
@@ -35,9 +40,15 @@ module.exports = {
               company_name,
               jabatan,
               phone_number,
-              roles: 1
+              roles: 1,
+              created_at: new Date()
             }
             const result = await seekerRegisModel(setData)
+            const setDataRecruiter = {
+              id_recruiter: result.id_user,
+              created_at: new Date()
+            }
+            await addRecruiterModel(setDataRecruiter)
             const transporter = nodemailer.createTransport({
               service: 'gmail',
               port: 587,
@@ -51,9 +62,7 @@ module.exports = {
               from: `"Get Dream Job "${process.env.email}`,
               to: `${email_user}`,
               subject: `Hello ${email_user}, Recruraiter`,
-              html: `<h2>Hello ${email_user} Thanks You for Register in Anya Coffee for activation your account please login first</h2>
-                  <p>Click This Link For Activation ur account</p>
-                  <a href ="http://localhost:8081/Login">Activation Email</a>`
+              html: 'haiii'
             }
             transporter.sendMail(mailOPtion, (err, result) => {
               if (err) {
@@ -76,6 +85,11 @@ module.exports = {
               roles: 0
             }
             const result = await seekerRegisModel(setData)
+            const setDataPekerja = {
+              id_pekerja: result.id_user,
+              created_at: new Date()
+            }
+            await addPekerjaModel(setDataPekerja)
             const transporter = nodemailer.createTransport({
               service: 'gmail',
               port: 587,
@@ -89,9 +103,7 @@ module.exports = {
               from: `"Get Dream Job "${process.env.email}`,
               to: `${email_user}`,
               subject: `Hello ${email_user}, Job Seaker`,
-              html: `<h2>Hello ${email_user} Thanks You for Register in Anya Coffee for activation your account please login first</h2>
-                  <p>Click This Link For Activation ur account</p>
-                  <a href ="http://localhost:8081/Login">Activation Email</a>`
+              html: 'haiii'
             }
             transporter.sendMail(mailOPtion, (err, result) => {
               if (err) {

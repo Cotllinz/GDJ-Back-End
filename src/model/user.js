@@ -20,6 +20,28 @@ module.exports = {
       )
     })
   },
+  addRecruiterModel: (setData) => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        'insert into profile_recruiter set ?',
+        setData,
+        (err, result) => {
+          !err ? resolve(result) : reject(new Error(err))
+        }
+      )
+    })
+  },
+  addPekerjaModel: (setData) => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        'insert into profile_pekerja set ?',
+        setData,
+        (err, result) => {
+          !err ? resolve(result) : reject(new Error(err))
+        }
+      )
+    })
+  },
   loginModel: (email) => {
     return new Promise((resolve, reject) => {
       connection.query(
