@@ -40,13 +40,15 @@ module.exports = {
             const result = await seekerRegisModel(setData)
             const transporter = nodemailer.createTransport({
               service: 'gmail',
+              port: 587,
+              secure: false,
               auth: {
                 user: process.env.email,
                 pass: process.env.pass
               }
             })
             const mailOPtion = {
-              from: `${process.env.email}`,
+              from: `"Get Dream Job "${process.env.email}`,
               to: `${email_user}`,
               subject: `Hello ${email_user}, Recruraiter`,
               html: `<h2>Hello ${email_user} Thanks You for Register in Anya Coffee for activation your account please login first</h2>
@@ -76,13 +78,15 @@ module.exports = {
             const result = await seekerRegisModel(setData)
             const transporter = nodemailer.createTransport({
               service: 'gmail',
+              port: 587,
+              secure: false,
               auth: {
                 user: process.env.email,
                 pass: process.env.pass
               }
             })
             const mailOPtion = {
-              from: `${process.env.email}`,
+              from: `"Get Dream Job "${process.env.email}`,
               to: `${email_user}`,
               subject: `Hello ${email_user}, Job Seaker`,
               html: `<h2>Hello ${email_user} Thanks You for Register in Anya Coffee for activation your account please login first</h2>
@@ -93,7 +97,7 @@ module.exports = {
               if (err) {
                 return helper.response(res, 400, 'Error Send Email', err)
               } else {
-                console.log('Success Send Email !!!')
+                return helper.response(res, 200, 'Success Send Email', result)
               }
             })
             return helper.response(
