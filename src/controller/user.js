@@ -6,16 +6,14 @@ const {
   loginModel,
   addRecruiterModel,
   addPekerjaModel,
-  hireModel,
-  notifModel,
+  confirmEmail,
+  codeTokenCheckModel,
   editProfilePekerjaModel,
   getPhotoProfilePekerjaModel
 } = require('../model/user')
 const nodemailer = require('nodemailer')
 require('dotenv').config()
 const fs = require('fs')
-const redis = require('redis')
-const client = redis.createClient()
 
 module.exports = {
   register: async (req, res) => {
@@ -47,6 +45,9 @@ module.exports = {
               company_name,
               jabatan,
               phone_number,
+              token_confirmEmail: require('crypto')
+                .randomBytes(15)
+                .toString('hex'),
               roles: 1,
               created_at: new Date()
             }
@@ -69,7 +70,7 @@ module.exports = {
               from: `"Get Dream Job "${process.env.email}`,
               to: `${email_user}`,
               subject: `Hello ${email_user}, Recruiter`,
-              html: 'haiii'
+              html: `<a href="localhost${result.token_confirmEmail}">Click This Button</a></a>`
             }
             transporter.sendMail(mailOPtion, (err, result) => {
               if (err) {
@@ -110,7 +111,7 @@ module.exports = {
               from: `"Get Dream Job "${process.env.email}`,
               to: `${email_user}`,
               subject: `Hello ${email_user}, Job Seaker`,
-              html: 'haiii'
+              html: `<a href="localhost${result.token_confirmEmail}">Click This Button</a></a>`
             }
             transporter.sendMail(mailOPtion, (err, result) => {
               if (err) {
@@ -135,7 +136,45 @@ module.exports = {
       return helper.response(res, 400, 'Bad Request', error)
     }
   },
-
+  confirmEmail: async (req, res) => {
+    try {
+      const { code_confirm } = req.params
+      const checkDataLogin = await codeTokenCheckModel(code_confirm)
+      if (checkDataLogin.length > 0) {
+        if (checkDataLogin[0].status_user === 'OFF') {
+          const sendActivation = {
+            status_user: 'ON',
+            update_at: new Date(),
+            token_confirmEmail: require('crypto')
+              .randomBytes(15)
+              .toString('hex')
+          }
+          const result = await confirmEmail(code_confirm, sendActivation)
+          return helper.response(
+            res,
+            200,
+            `Activation your Email ${checkDataLogin[0].email_user} Succesfully`,
+            result
+          )
+        } else {
+          return helper.response(
+            res,
+            406,
+            `Your Email ${checkDataLogin[0].email_user} Has been Active`
+          )
+        }
+      } else {
+        return helper.response(
+          res,
+          404,
+          'You havent activated your account yet'
+        )
+      }
+    } catch (err) {
+      console.log(err)
+      return helper.response(res, 400, 'Bad Request!', err)
+    }
+  },
   login: async (request, response) => {
     try {
       const { email_user, user_password } = request.body
@@ -178,57 +217,6 @@ module.exports = {
     } catch (error) {
       console.log(error)
       return helper.response(response, 400, 'Bad Request!', error)
-    }
-  },
-  hire: async (request, response) => {
-    try {
-      const { id_recruiter, id_pekerja, jobs_needed, desc_jobs } = request.body
-      if (id_pekerja && jobs_needed && desc_jobs) {
-        const setData = {
-          id_recruiter,
-          id_pekerja,
-          files: request.file === undefined ? '' : request.file.filename,
-          jobs_needed,
-          desc_jobs,
-          created_at: new Date()
-        }
-        const result = await hireModel(setData)
-        return helper.response(
-          response,
-          200,
-          `Sending offer letter to ${id_pekerja}`,
-          result
-        )
-      } else {
-        return helper.response(response, 400, 'All data must be filled in')
-      }
-    } catch (error) {
-      console.log(error)
-      return helper.response(response, 400, 'Bad Request', error)
-    }
-  },
-  notif: async (request, response) => {
-    try {
-      const { id } = request.params
-      console.log(request.params)
-      const hireNotif = await notifModel(id)
-      if (hireNotif.length > 0) {
-        client.setex(`notifById:${id}`, 3600, JSON.stringify(hireNotif))
-        return helper.response(
-          response,
-          200,
-          'You have an offering letter',
-          hireNotif
-        )
-      } else {
-        return helper.response(
-          response,
-          404,
-          'There is no offering letter for you'
-        )
-      }
-    } catch (error) {
-      return helper.response(response, 400, 'Bad Request', error)
     }
   },
   editProfilePekerja: async (request, response) => {

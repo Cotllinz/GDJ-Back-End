@@ -22,6 +22,6 @@ app.use('/', routeNav)
 app.get('*', (request, response) => {
   response.status(404).send('Path not found')
 })
-app.listen(process.env.PORT, () => {
+app.listen(process.env.PORT, '0.0.0.0', () => {
   console.log(`Express app is listening on port ${process.env.PORT}`)
 })
