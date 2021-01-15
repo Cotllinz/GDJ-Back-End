@@ -31,6 +31,20 @@ module.exports = {
       )
     })
   },
+  confirmEmail: (code, setData) => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        'update user_account set ? where token_confirmEmail = ?',
+        [setData, code],
+        (err, result) => {
+          const newResult = {
+            ...setData
+          }
+          !err ? resolve(newResult) : reject(new Error(err))
+        }
+      )
+    })
+  },
   addPekerjaModel: (setData) => {
     return new Promise((resolve, reject) => {
       connection.query(
@@ -57,32 +71,17 @@ module.exports = {
       )
     })
   },
-  hireModel: (setData) => {
+  codeTokenCheckModel: (code) => {
     return new Promise((resolve, reject) => {
       connection.query(
-        'INSERT INTO hired_jobs SET ?',
-        setData,
+        'SELECT id_user, email_user, user_password, roles, status_user FROM user_account WHERE token_confirmEmail=?',
+        code,
         (error, result) => {
           if (!error) {
-            const newResult = {
-              id: result.insertId,
-              ...setData
-            }
-            resolve(newResult)
+            resolve(result)
           } else {
             reject(new Error(error))
           }
-        }
-      )
-    })
-  },
-  notifModel: (id) => {
-    return new Promise((resolve, reject) => {
-      connection.query(
-        `SELECT id_recruiter, jobs_needed, desc_jobs FROM hired_jobs WHERE id_pekerja = ${id}`,
-        // `SELECT hired_jobs.jobs_needed, hired_jobs.desc_jobs, profile_recruiter.city_recruiter, profile_recruiter.image_recruiter FROM hired_jobs JOIN profile_recruiter ON hired_jobs.id_recruiter = profile_recruiter.id_recruiter = ${id}`,
-        (error, result) => {
-          !error ? resolve(result) : reject(new Error(error))
         }
       )
     })

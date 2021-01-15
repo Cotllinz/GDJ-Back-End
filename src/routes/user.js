@@ -1,12 +1,11 @@
 const router = require('express').Router()
-const uploadFiles = require('../middleware/multerFileHire')
 
-const { register, login, hire, notif } = require('../controller/user')
+const { register, login, confirmEmail } = require('../controller/user')
 // const { notifRedis } = require('../middleware/redis')
 
 router.post('/register', register)
 router.post('/login', login)
-router.post('/hire', uploadFiles, hire)
-router.get('/notif/:id', notif)
+// router.get('/notif/:id', notif)
+router.patch('/activation/:code_confirm', confirmEmail)
 
 module.exports = router
