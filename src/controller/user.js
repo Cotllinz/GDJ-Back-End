@@ -6,10 +6,13 @@ const {
   loginModel,
   addRecruiterModel,
   addPekerjaModel,
-  hireModel
+  hireModel,
+  notifModel
 } = require('../model/user')
 const nodemailer = require('nodemailer')
 require('dotenv').config()
+const redis = require('redis')
+const client = redis.createClient()
 
 module.exports = {
   register: async (req, res) => {
@@ -198,6 +201,30 @@ module.exports = {
       }
     } catch (error) {
       console.log(error)
+      return helper.response(response, 400, 'Bad Request', error)
+    }
+  },
+  notif: async (request, response) => {
+    try {
+      const { id } = request.params
+      console.log(request.params)
+      const hireNotif = await notifModel(id)
+      if (hireNotif.length > 0) {
+        client.setex(`notifById:${id}`, 3600, JSON.stringify(hireNotif))
+        return helper.response(
+          response,
+          200,
+          'You have an offering letter',
+          hireNotif
+        )
+      } else {
+        return helper.response(
+          response,
+          404,
+          'There is no offering letter for you'
+        )
+      }
+    } catch (error) {
       return helper.response(response, 400, 'Bad Request', error)
     }
   }
