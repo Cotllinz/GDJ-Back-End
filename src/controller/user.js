@@ -7,10 +7,13 @@ const {
   addRecruiterModel,
   addPekerjaModel,
   hireModel,
-  notifModel
+  notifModel,
+  editProfilePekerjaModel,
+  getPhotoProfilePekerjaModel
 } = require('../model/user')
 const nodemailer = require('nodemailer')
 require('dotenv').config()
+const fs = require('fs')
 const redis = require('redis')
 const client = redis.createClient()
 
@@ -224,6 +227,40 @@ module.exports = {
           'There is no offering letter for you'
         )
       }
+    } catch (error) {
+      return helper.response(response, 400, 'Bad Request', error)
+    }
+  },
+  editProfilePekerja: async (request, response) => {
+    try {
+      const { id } = request.params
+      const photo = await getPhotoProfilePekerjaModel(id)
+      const { fullname_pekerja, job_desk, city_pekerja, status_jobs, work_place, desc_pekerja } = request.body
+      const setData = {
+        id_pekerja: id,
+        fullname_pekerja,
+        job_desk,
+        city_pekerja,
+        status_jobs,
+        work_place,
+        desc_pekerja,
+        image_pekerja: request.file === undefined ? photo : request.file.filename,
+        update_at: new Date()
+      }
+      console.log(setData.image_pekerja)
+      if (setData.image_pekerja !== photo) {
+        fs.unlink(`./upload/fileUserProfile/${photo}`, function (err) {
+          if (err) console.log(err)
+          console.log('File deleted')
+        })
+      }
+      const result = await editProfilePekerjaModel(setData, id)
+      return helper.response(
+        response,
+        200,
+        `Success update profile user by id ${id}`,
+        result
+      )
     } catch (error) {
       return helper.response(response, 400, 'Bad Request', error)
     }

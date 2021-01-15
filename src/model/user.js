@@ -42,6 +42,17 @@ module.exports = {
       )
     })
   },
+  getPhotoProfilePekerjaModel: (id) => {
+    return new Promise((resolve, reject) => {
+      connection.query(`SELECT image_pekerja AS photo FROM profile_pekerja WHERE id_pekerja=${id}`, (error, result) => {
+        if (!error) {
+          resolve(result[0].photo)
+        } else {
+          reject(error)
+        }
+      })
+    })
+  },
   loginModel: (email) => {
     return new Promise((resolve, reject) => {
       connection.query(
@@ -85,6 +96,24 @@ module.exports = {
           !error ? resolve(result) : reject(new Error(error))
         }
       )
+    })
+  },
+  editProfilePekerjaModel: (setData, id) => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+      `UPDATE profile_pekerja SET ? WHERE id_pekerja=${id}`,
+      setData,
+      (error, result) => {
+        if (!error) {
+          const newResult = {
+            id_pekerja: result.insertId,
+            ...setData
+          }
+          resolve(newResult)
+        } else {
+          reject(new Error(error))
+        }
+      })
     })
   }
 }
