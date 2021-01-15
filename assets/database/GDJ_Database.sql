@@ -48,10 +48,12 @@ CREATE TABLE IF NOT EXISTS `hired_jobs` (
   `desc_jobs` varchar(50) NOT NULL,
   `created_at` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 
 -- Dumping data for table gdj_database.hired_jobs: ~0 rows (approximately)
 /*!40000 ALTER TABLE `hired_jobs` DISABLE KEYS */;
+INSERT INTO `hired_jobs` (`id`, `id_recruiter`, `id_pekerja`, `files`, `jobs_needed`, `desc_jobs`, `created_at`) VALUES
+	(1, 1, 2, '2021-01-15T10-23-09.813ZWhite GDJ icon.png', 'OJEK', 'Nganterin', '2021-01-15 10:23:09');
 /*!40000 ALTER TABLE `hired_jobs` ENABLE KEYS */;
 
 -- Dumping structure for table gdj_database.portofolio
@@ -71,10 +73,11 @@ CREATE TABLE IF NOT EXISTS `profile_pekerja` (
   `fullname_pekerja` varchar(100) NOT NULL,
   `job_desk` varchar(100) NOT NULL,
   `city_pekerja` varchar(50) NOT NULL,
+  `job_require` varchar(50) NOT NULL,
   `status_jobs` varchar(50) NOT NULL,
   `work_place` varchar(50) NOT NULL,
   `desc_pekerja` varchar(150) NOT NULL,
-  `image_pekerja` varchar(50) NOT NULL,
+  `image_pekerja` varchar(150) NOT NULL,
   `created_at` datetime NOT NULL,
   `update_at` datetime NOT NULL,
   PRIMARY KEY (`id_pekerja`)
@@ -89,7 +92,7 @@ CREATE TABLE IF NOT EXISTS `profile_recruiter` (
   `id_recruiter` int(11) NOT NULL,
   `city_recruiter` varchar(50) NOT NULL,
   `desc_recruiter` varchar(150) NOT NULL,
-  `image_recruiter` varchar(100) NOT NULL,
+  `image_recruiter` varchar(150) NOT NULL,
   `social_media` varchar(100) NOT NULL,
   `linked_in` varchar(100) NOT NULL,
   `created_at` datetime NOT NULL,
@@ -97,11 +100,8 @@ CREATE TABLE IF NOT EXISTS `profile_recruiter` (
   PRIMARY KEY (`id_recruiter`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Dumping data for table gdj_database.profile_recruiter: ~2 rows (approximately)
+-- Dumping data for table gdj_database.profile_recruiter: ~0 rows (approximately)
 /*!40000 ALTER TABLE `profile_recruiter` DISABLE KEYS */;
-INSERT INTO `profile_recruiter` (`id_recruiter`, `city_recruiter`, `desc_recruiter`, `image_recruiter`, `social_media`, `linked_in`, `created_at`, `update_at`) VALUES
-	(1, '', '', '', '', '', '2021-01-14 11:58:56', '0000-00-00 00:00:00'),
-	(2, '', '', '', '', '', '2021-01-14 12:00:49', '0000-00-00 00:00:00');
 /*!40000 ALTER TABLE `profile_recruiter` ENABLE KEYS */;
 
 -- Dumping structure for table gdj_database.user_account
