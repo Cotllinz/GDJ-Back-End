@@ -92,6 +92,9 @@ module.exports = {
             const setData = {
               username,
               email_user,
+              token_confirmEmail: require('crypto')
+                .randomBytes(15)
+                .toString('hex'),
               user_password: encryptPassword,
               roles: 0
             }
