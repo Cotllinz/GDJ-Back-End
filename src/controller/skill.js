@@ -2,7 +2,8 @@ const helper = require('../helper/helper')
 const {
   addSkillModel,
   getSkillModel,
-  deleteSkillModel
+  deleteSkillModel,
+  editSkillModel
 } = require('../model/skill')
 
 module.exports = {
@@ -51,6 +52,25 @@ module.exports = {
         return helper.response(response, 404, `Skill Id : ${id} Not Found`)
       }
     } catch (error) {
+      return helper.response(response, 400, 'Bad Request', error)
+    }
+  },
+  editSkill: async (request, response) => {
+    try {
+      const { id } = request.params
+      const { skill_name } = request.body
+      const setData = {
+        skill_name
+      }
+      const checking = await getSkillModel(id)
+      if (checking.length > 0) {
+        const result = await editSkillModel(setData, id)
+        return helper.response(response, 200, 'Success edit skill', result)
+      } else {
+        return helper.response(response, 404, `Skill by id : ${id} Not Found`)
+      }
+    } catch (error) {
+      console.log(error)
       return helper.response(response, 400, 'Bad Request', error)
     }
   }
