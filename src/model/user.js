@@ -56,5 +56,24 @@ module.exports = {
         }
       )
     })
+  },
+  hireModel: (setData) => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        'INSERT INTO hired_jobs SET ?',
+        setData,
+        (error, result) => {
+          if (!error) {
+            const newResult = {
+              id: result.insertId,
+              ...setData
+            }
+            resolve(newResult)
+          } else {
+            reject(new Error(error))
+          }
+        }
+      )
+    })
   }
 }

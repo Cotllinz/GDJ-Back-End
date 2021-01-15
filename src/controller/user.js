@@ -5,7 +5,8 @@ const {
   seekerRegisModel,
   loginModel,
   addRecruiterModel,
-  addPekerjaModel
+  addPekerjaModel,
+  hireModel
 } = require('../model/user')
 const nodemailer = require('nodemailer')
 require('dotenv').config()
@@ -61,7 +62,7 @@ module.exports = {
             const mailOPtion = {
               from: `"Get Dream Job "${process.env.email}`,
               to: `${email_user}`,
-              subject: `Hello ${email_user}, Recruraiter`,
+              subject: `Hello ${email_user}, Recruiter`,
               html: 'haiii'
             }
             transporter.sendMail(mailOPtion, (err, result) => {
@@ -171,6 +172,33 @@ module.exports = {
     } catch (error) {
       console.log(error)
       return helper.response(response, 400, 'Bad Request!', error)
+    }
+  },
+  hire: async (request, response) => {
+    try {
+      const { id_recruiter, id_pekerja, jobs_needed, desc_jobs } = request.body
+      if (id_pekerja && jobs_needed && desc_jobs) {
+        const setData = {
+          id_recruiter,
+          id_pekerja,
+          files: request.file === undefined ? '' : request.file.filename,
+          jobs_needed,
+          desc_jobs,
+          created_at: new Date()
+        }
+        const result = await hireModel(setData)
+        return helper.response(
+          response,
+          200,
+          `Sending offer letter to ${id_pekerja}`,
+          result
+        )
+      } else {
+        return helper.response(response, 400, 'All data must be filled in')
+      }
+    } catch (error) {
+      console.log(error)
+      return helper.response(response, 400, 'Bad Request', error)
     }
   }
 }
