@@ -175,7 +175,7 @@ module.exports = {
       return helper.response(res, 400, 'Bad Request!', err)
     }
   },
-  login: async (request, response) => {
+  loginRequiter: async (request, response) => {
     try {
       const { email_user, user_password } = request.body
       const checkDataLogin = await loginModel(email_user)
@@ -193,14 +193,62 @@ module.exports = {
               roles,
               status_user
             }
-            const token = jwt.sign(payload, process.env.ACCESS, {
-              expiresIn: '1hr'
-            })
-            const result = {
-              ...payload,
-              token
+            if (roles === 1) {
+              const token = jwt.sign(payload, process.env.ACCESS_, {
+                expiresIn: '1hr'
+              })
+              const result = {
+                ...payload,
+                token
+              }
+              return helper.response(response, 200, 'Successs Login!', result)
             }
-            return helper.response(response, 200, 'Successs Login!', result)
+          } else {
+            return helper.response(
+              response,
+              400,
+              "You haven't activated your account yet"
+            )
+          }
+        } else {
+          return helper.response(response, 400, 'Wrong Password!')
+        }
+      } else {
+        return helper.response(response, 400, "You haven't registered yet!")
+      }
+    } catch (error) {
+      console.log(error)
+      return helper.response(response, 400, 'Bad Request!', error)
+    }
+  },
+  loginJobSeeker: async (request, response) => {
+    try {
+      const { email_user, user_password } = request.body
+      const checkDataLogin = await loginModel(email_user)
+      if (checkDataLogin.length > 0) {
+        const checkPasssword = bcrypt.compareSync(
+          user_password,
+          checkDataLogin[0].user_password
+        )
+        if (checkPasssword) {
+          const { id_user, email_user, roles, status_user } = checkDataLogin[0]
+          if (status_user === 'ON') {
+            const payload = {
+              id_user,
+              email_user,
+              roles,
+              status_user
+            }
+            if (roles === 0) {
+              const token = jwt.sign(payload, process.env.ACCESS_, {
+                expiresIn: '1hr'
+              })
+              const result = {
+                ...payload,
+                token
+              }
+              return helper.response(response, 200, 'Successs Login!', result)
+            }
           } else {
             return helper.response(
               response,
@@ -223,32 +271,45 @@ module.exports = {
     try {
       const { id } = request.params
       const photo = await getPhotoProfilePekerjaModel(id)
-      const { fullname_pekerja, job_desk, city_pekerja, status_jobs, work_place, desc_pekerja } = request.body
-      const setData = {
-        id_pekerja: id,
-        fullname_pekerja,
-        job_desk,
-        city_pekerja,
-        status_jobs,
-        work_place,
-        desc_pekerja,
-        image_pekerja: request.file === undefined ? photo : request.file.filename,
-        update_at: new Date()
+      console.log(photo)
+      if (photo !== undefined) {
+        const {
+          fullname_pekerja,
+          job_desk,
+          city_pekerja,
+          status_jobs,
+          work_place,
+          desc_pekerja
+        } = request.body
+        const setData = {
+          id_pekerja: id,
+          fullname_pekerja,
+          job_desk,
+          city_pekerja,
+          status_jobs,
+          work_place,
+          desc_pekerja,
+          image_pekerja:
+            request.file === undefined ? photo : request.file.filename,
+          update_at: new Date()
+        }
+        console.log(setData.image_pekerja)
+        if (setData.image_pekerja !== photo) {
+          fs.unlink(`./upload/fileUserProfile/${photo}`, function (err) {
+            if (err) console.log(err)
+            console.log('File deleted')
+          })
+        }
+        const result = await editProfilePekerjaModel(setData, id)
+        return helper.response(
+          response,
+          200,
+          `Success update profile user by id ${id}`,
+          result
+        )
+      } else {
+        return helper.response(response, 404, 'ID Not Found!')
       }
-      console.log(setData.image_pekerja)
-      if (setData.image_pekerja !== photo) {
-        fs.unlink(`./upload/fileUserProfile/${photo}`, function (err) {
-          if (err) console.log(err)
-          console.log('File deleted')
-        })
-      }
-      const result = await editProfilePekerjaModel(setData, id)
-      return helper.response(
-        response,
-        200,
-        `Success update profile user by id ${id}`,
-        result
-      )
     } catch (error) {
       return helper.response(response, 400, 'Bad Request', error)
     }
