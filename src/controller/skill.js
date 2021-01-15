@@ -1,5 +1,5 @@
 const helper = require('../helper/helper')
-const { addSkillModel } = require('../model/skill')
+const { addSkillModel, getSkillModel } = require('../model/skill')
 
 module.exports = {
   addSkill: async (request, response) => {
@@ -17,6 +17,23 @@ module.exports = {
       return helper.response(response, 200, 'Success add your skill', result)
     } catch (error) {
       console.log(error)
+      return helper.response(response, 400, 'Bad Request', error)
+    }
+  },
+  getSkill: async (request, response) => {
+    try {
+      const { id } = request.params
+      const result = await getSkillModel(id)
+      if (result.length > 0) {
+        return helper.response(response, 200, 'Success Get Skill By Id', result)
+      } else {
+        return helper.response(
+          response,
+          404,
+          `There is no skill for pekerja with id ${id}`
+        )
+      }
+    } catch (error) {
       return helper.response(response, 400, 'Bad Request', error)
     }
   }
