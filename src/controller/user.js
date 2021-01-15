@@ -9,7 +9,10 @@ const {
   confirmEmail,
   codeTokenCheckModel,
   editProfilePekerjaModel,
-  getPhotoProfilePekerjaModel
+  getPhotoProfilePekerjaModel,
+  updateTokenForgetPass,
+  updatePasswordForgot,
+  codeTokenForgotCheckModel
 } = require('../model/user')
 const nodemailer = require('nodemailer')
 require('dotenv').config()
@@ -175,6 +178,72 @@ module.exports = {
       return helper.response(res, 400, 'Bad Request!', err)
     }
   },
+  SendEmailForgotPassword: async (req, res) => {
+    try {
+      const { email } = req.body
+      const checkEmail = await loginModel(email)
+      if (checkEmail.length > 0) {
+        const setToken = {
+          token_forgotPassword: require('crypto')
+            .randomBytes(15)
+            .toString('hex'),
+          update_at: new Date()
+        }
+        const result = await updateTokenForgetPass(email, setToken)
+        const transporter = nodemailer.createTransport({
+          service: 'gmail',
+          port: 587,
+          secure: false,
+          auth: {
+            user: process.env.email,
+            pass: process.env.pass
+          }
+        })
+        const mailOPtion = {
+          from: `"Get Dream Job "${process.env.email}`,
+          to: `${email}`,
+          subject: `Hello ${email}`,
+          html: `<a href="localhost${result.token_forgotPassword}">Click This Button for update ur password</a></a>`
+        }
+        transporter.sendMail(mailOPtion, (err, result) => {
+          if (err) {
+            return helper.response(res, 400, 'Error Send Email', err)
+          } else {
+            return helper.response(res, 200, 'Success Send Email')
+          }
+        })
+      } else {
+        return helper.response(res, 400, "You haven't registered yet!")
+      }
+    } catch (err) {
+      return helper.response(res, 400, 'Bad Request!', err)
+    }
+  },
+  updatePasswordonForgetPass: async (req, res) => {
+    try {
+      const { token, password } = req.body
+      const checkToken = await codeTokenForgotCheckModel(token)
+      if (checkToken.length > 0) {
+        const salt = bcrypt.genSaltSync(10)
+        const encryptPassword = bcrypt.hashSync(password, salt)
+        const setData = {
+          user_password: encryptPassword,
+          token_forgotPassword: '',
+          update_at: new Date()
+        }
+        await updatePasswordForgot(token, setData)
+        return helper.response(
+          res,
+          200,
+          'Reset your Password Succesfully'
+        )
+      } else {
+        return helper.response(res, 400, 'Your Token Invalid')
+      }
+    } catch (err) {
+      return helper.response(res, 400, 'Bad Request!', err)
+    }
+  },
   login: async (request, response) => {
     try {
       const { email_user, user_password } = request.body
@@ -215,7 +284,6 @@ module.exports = {
         return helper.response(response, 400, "You haven't registered yet!")
       }
     } catch (error) {
-      console.log(error)
       return helper.response(response, 400, 'Bad Request!', error)
     }
   },
@@ -223,7 +291,14 @@ module.exports = {
     try {
       const { id } = request.params
       const photo = await getPhotoProfilePekerjaModel(id)
-      const { fullname_pekerja, job_desk, city_pekerja, status_jobs, work_place, desc_pekerja } = request.body
+      const {
+        fullname_pekerja,
+        job_desk,
+        city_pekerja,
+        status_jobs,
+        work_place,
+        desc_pekerja
+      } = request.body
       const setData = {
         id_pekerja: id,
         fullname_pekerja,
@@ -232,7 +307,8 @@ module.exports = {
         status_jobs,
         work_place,
         desc_pekerja,
-        image_pekerja: request.file === undefined ? photo : request.file.filename,
+        image_pekerja:
+          request.file === undefined ? photo : request.file.filename,
         update_at: new Date()
       }
       console.log(setData.image_pekerja)
