@@ -43,12 +43,10 @@ CREATE TABLE IF NOT EXISTS `hired_jobs` (
   `desc_jobs` varchar(50) NOT NULL,
   `created_at` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Dumping data for table gdj_database.hired_jobs: ~0 rows (approximately)
 /*!40000 ALTER TABLE `hired_jobs` DISABLE KEYS */;
-INSERT INTO `hired_jobs` (`id`, `id_recruiter`, `id_pekerja`, `files`, `jobs_needed`, `desc_jobs`, `created_at`) VALUES
-	(1, 1, 2, '2021-01-15T10-23-09.813ZWhite GDJ icon.png', 'OJEK', 'Nganterin', '2021-01-15 10:23:09');
 /*!40000 ALTER TABLE `hired_jobs` ENABLE KEYS */;
 
 -- Dumping structure for table gdj_database.portofolio
@@ -60,7 +58,7 @@ CREATE TABLE IF NOT EXISTS `portofolio` (
   `type_portofolio` varchar(30) NOT NULL,
   `image_portofolio` varchar(150) NOT NULL,
   `create_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `Column 8` datetime NOT NULL,
+  `update_at` datetime NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -112,6 +110,8 @@ CREATE TABLE IF NOT EXISTS `profile_recruiter` (
 CREATE TABLE IF NOT EXISTS `skills_pekerja` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_pekerja` int(11) NOT NULL,
+  `skill_name` varchar(100) NOT NULL,
+  `create_at` datetime NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
