@@ -205,17 +205,21 @@ module.exports = {
           from: `"Get Dream Job "${process.env.email}`,
           to: `${email}`,
           subject: `Hello ${email}`,
-          html: `<a href="localhost${result.token_forgotPassword}">Click This Button for update ur password</a></a>`
+          html: `<a href="localhost${result.token_forgotPassword}">Click This link to update your password</a></a>`
         }
         transporter.sendMail(mailOPtion, (err, result) => {
           if (err) {
             return helper.response(res, 400, 'Error Send Email', err)
           } else {
-            return helper.response(res, 200, 'Success Send Email')
+            return helper.response(
+              res,
+              200,
+              'Check your email for the link to re-new your password'
+            )
           }
         })
       } else {
-        return helper.response(res, 400, "You haven't registered yet!")
+        return helper.response(res, 400, 'This email is not registered')
       }
     } catch (err) {
       return helper.response(res, 400, 'Bad Request!', err)
