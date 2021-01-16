@@ -31,11 +31,11 @@ module.exports = {
       )
     })
   },
-  deleteSkillModel: (id) => {
+  deleteSkillModel: (id, idSkill) => {
     return new Promise((resolve, reject) => {
       connection.query(
-        'DELETE FROM skills_pekerja WHERE id_pekerja = ?',
-        id,
+        'DELETE FROM skills_pekerja WHERE id_pekerja = ? AND id = ?',
+        [id, idSkill],
         (error, result) => {
           !error ? resolve(result) : reject(new Error(error))
         }

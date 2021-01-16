@@ -45,7 +45,10 @@ module.exports = {
   deleteSkill: async (request, response) => {
     try {
       const { id } = request.params
-      const result = await deleteSkillModel(id)
+      const { idSkill } = request.body
+      console.log(id)
+      console.log(idSkill)
+      const result = await deleteSkillModel(id, idSkill)
       if (result.length == null) {
         return helper.response(response, 200, 'Success delete skill')
       } else {
