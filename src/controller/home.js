@@ -2,14 +2,14 @@ const helper = require('../helper/helper')
 const qs = require('querystring')
 const {
   searchSorthModel,
-  getDataCountModel,
-  getSearchCountModel
+  getSearchCountModel,
+  getSkill
 } = require('../model/home')
 
 module.exports = {
   searchSort: async (request, response) => {
     try {
-      let { page, limit, search, status, sort } = request.query
+      let { page, limit, search, sort, coba } = request.query
       page = parseInt(page)
       limit = parseInt(limit)
       let searching
@@ -24,18 +24,14 @@ module.exports = {
       } else {
         sorting = ''
       }
-      let sortStatus
-      if (status) {
-        sortStatus = status
+      let cobas
+      if (coba) {
+        cobas = coba
       } else {
-        sortStatus = ''
+        cobas = ''
       }
-      let totalData
-      if (search) {
-        totalData = await getSearchCountModel(search)
-      } else {
-        totalData = await getDataCountModel()
-      }
+      console.log(cobas)
+      const totalData = await getSearchCountModel(searching, cobas)
       const totalPage = Math.ceil(totalData / limit)
       const offset = page * limit - limit
       const prevLink =
@@ -51,16 +47,19 @@ module.exports = {
         limit,
         totalPage,
         totalData,
-        nextLink: nextLink && `http://localhost:3000/data/limit?${nextLink}`,
-        prevLink: prevLink && `http://localhost:3000/data/limit?${prevLink}`
+        nextLink: nextLink && `http://localhost:3000/home/?${nextLink}`,
+        prevLink: prevLink && `http://localhost:3000/home/?${prevLink}`
       }
       const result = await searchSorthModel(
         limit,
         offset,
         searching,
-        sortStatus,
+        cobas,
         sorting
       )
+      for (let i = 0; i < result.length; i++) {
+        result[i].skills = await getSkill(result[i].id_pekerja)
+      }
       return helper.response(
         response,
         200,
