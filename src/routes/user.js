@@ -9,7 +9,8 @@ const {
   updatePasswordonForgetPass,
   loginRequiter,
   loginJobSeeker,
-  editProfilePekerja
+  editProfilePekerja,
+  getProfilePekerja
 } = require('../controller/user')
 
 router.post('/register', register)
@@ -18,6 +19,7 @@ router.patch('/resetPassword', updatePasswordonForgetPass)
 router.patch('/activation/:code_confirm', confirmEmail)
 router.post('/loginrequiter', authorization, isReqruiter, loginRequiter)
 router.post('/loginjobseeker', authorization, isSeeker, loginJobSeeker)
+router.get('/profile/:id', getProfilePekerja)
 router.patch('/editprofile/:id', uploadFilesUser, editProfilePekerja)
 // authorization, isSeeker,
 module.exports = router

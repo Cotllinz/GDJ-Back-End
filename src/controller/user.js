@@ -386,5 +386,24 @@ module.exports = {
     } catch (error) {
       return helper.response(response, 400, 'Bad Request', error)
     }
+  },
+  getProfilePekerja: async (req, res) => {
+    try {
+      const { id } = req.params
+      const result = await getProfilePekerjaModel(id)
+      if (result.length > 0) {
+        return helper.response(
+          res,
+          200,
+          `Success get data profil job seeker by id ${id}`,
+          result
+        )
+      } else {
+        return helper.response(res, 404, 'ID Not Found')
+      }
+    } catch (error) {
+      console.log(error)
+      return helper.response(res, 400, 'Bad Request', error)
+    }
   }
 }
