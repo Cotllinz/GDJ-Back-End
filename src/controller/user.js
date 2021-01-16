@@ -246,39 +246,54 @@ module.exports = {
   },
   login: async (request, response) => {
     try {
-      const { email_user, user_password } = request.body
+      const { email_user, user_password, roles } = request.body
       const checkDataLogin = await loginModel(email_user)
       if (checkDataLogin.length > 0) {
-        const checkPasssword = bcrypt.compareSync(
-          user_password,
-          checkDataLogin[0].user_password
-        )
-        if (checkPasssword) {
-          const { id_user, email_user, roles, status_user } = checkDataLogin[0]
-          if (status_user === 'ON') {
-            const payload = {
+        if (roles == checkDataLogin[0].roles) {
+          const checkPasssword = bcrypt.compareSync(
+            user_password,
+            checkDataLogin[0].user_password
+          )
+          if (checkPasssword) {
+            const {
               id_user,
               email_user,
               roles,
               status_user
+            } = checkDataLogin[0]
+            if (status_user === 'ON') {
+              const payload = {
+                id_user,
+                email_user,
+                roles,
+                status_user
+              }
+              const token = jwt.sign(payload, process.env.ACCESS, {
+                expiresIn: '1hr'
+              })
+              const result = {
+                ...payload,
+                token
+              }
+              return helper.response(response, 200, 'Successs Login!', result)
+            } else {
+              return helper.response(
+                response,
+                400,
+                "You haven't activated your account yet"
+              )
             }
-            const token = jwt.sign(payload, process.env.ACCESS, {
-              expiresIn: '1hr'
-            })
-            const result = {
-              ...payload,
-              token
-            }
-            return helper.response(response, 200, 'Successs Login!', result)
           } else {
-            return helper.response(
-              response,
-              400,
-              "You haven't activated your account yet"
-            )
+            return helper.response(response, 400, 'Wrong Password!')
           }
         } else {
-          return helper.response(response, 400, 'Wrong Password!')
+          let infoError
+          if (checkDataLogin[0].roles === 0) {
+            infoError = 'Your Email Not Register as Recruiter'
+          } else {
+            infoError = 'Your Email Not Register as Job Seaker'
+          }
+          return helper.response(response, 400, `${infoError}`)
         }
       } else {
         return helper.response(response, 400, "You haven't registered yet!")
