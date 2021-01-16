@@ -43,12 +43,10 @@ CREATE TABLE IF NOT EXISTS `hired_jobs` (
   `desc_jobs` varchar(50) NOT NULL,
   `created_at` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Dumping data for table gdj_database.hired_jobs: ~0 rows (approximately)
 /*!40000 ALTER TABLE `hired_jobs` DISABLE KEYS */;
-INSERT INTO `hired_jobs` (`id`, `id_recruiter`, `id_pekerja`, `files`, `jobs_needed`, `desc_jobs`, `created_at`) VALUES
-	(1, 1, 2, '2021-01-15T10-23-09.813ZWhite GDJ icon.png', 'OJEK', 'Nganterin', '2021-01-15 10:23:09');
 /*!40000 ALTER TABLE `hired_jobs` ENABLE KEYS */;
 
 -- Dumping structure for table gdj_database.portofolio
@@ -60,7 +58,7 @@ CREATE TABLE IF NOT EXISTS `portofolio` (
   `type_portofolio` varchar(30) NOT NULL,
   `image_portofolio` varchar(150) NOT NULL,
   `create_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `Column 8` datetime NOT NULL,
+  `update_at` datetime NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -75,7 +73,7 @@ CREATE TABLE IF NOT EXISTS `profile_pekerja` (
   `job_desk` varchar(100) NOT NULL,
   `city_pekerja` varchar(50) NOT NULL,
   `job_require` varchar(50) NOT NULL,
-  `status_jobs` varchar(50) NOT NULL,
+  `status_jobs` enum('ON','OFF') NOT NULL DEFAULT 'OFF',
   `work_place` varchar(50) NOT NULL,
   `desc_pekerja` varchar(150) NOT NULL,
   `image_pekerja` varchar(150) NOT NULL,
@@ -89,6 +87,8 @@ CREATE TABLE IF NOT EXISTS `profile_pekerja` (
 
 -- Dumping data for table gdj_database.profile_pekerja: ~0 rows (approximately)
 /*!40000 ALTER TABLE `profile_pekerja` DISABLE KEYS */;
+INSERT INTO `profile_pekerja` (`id_pekerja`, `fullname_pekerja`, `job_desk`, `city_pekerja`, `job_require`, `status_jobs`, `work_place`, `desc_pekerja`, `image_pekerja`, `instagram`, `linked`, `github`, `created_at`, `update_at`) VALUES
+	(2, 'Test Doang Lagi', 'Web Developer', 'Balikpapan', 'Freelance', 'OFF', 'Singapore', 'Pencari Sejati', '2021-01-16T17-30-40.313Zayam.jpg', 'gaalleh', 'galeh', 'galeh', '2021-01-16 17:06:39', '2021-01-16 17:31:56');
 /*!40000 ALTER TABLE `profile_pekerja` ENABLE KEYS */;
 
 -- Dumping structure for table gdj_database.profile_recruiter
@@ -104,14 +104,18 @@ CREATE TABLE IF NOT EXISTS `profile_recruiter` (
   PRIMARY KEY (`id_recruiter`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Dumping data for table gdj_database.profile_recruiter: ~0 rows (approximately)
+-- Dumping data for table gdj_database.profile_recruiter: ~1 rows (approximately)
 /*!40000 ALTER TABLE `profile_recruiter` DISABLE KEYS */;
+INSERT INTO `profile_recruiter` (`id_recruiter`, `city_recruiter`, `desc_recruiter`, `image_recruiter`, `social_media`, `linked_in`, `created_at`, `update_at`) VALUES
+	(1, '', '', '', '', '', '2021-01-16 17:06:27', '0000-00-00 00:00:00');
 /*!40000 ALTER TABLE `profile_recruiter` ENABLE KEYS */;
 
 -- Dumping structure for table gdj_database.skills_pekerja
 CREATE TABLE IF NOT EXISTS `skills_pekerja` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_pekerja` int(11) NOT NULL,
+  `skill_name` varchar(100) NOT NULL,
+  `create_at` datetime NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -135,10 +139,13 @@ CREATE TABLE IF NOT EXISTS `user_account` (
   `created_at` datetime NOT NULL,
   `update_at` datetime NOT NULL,
   PRIMARY KEY (`id_user`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 
--- Dumping data for table gdj_database.user_account: ~0 rows (approximately)
+-- Dumping data for table gdj_database.user_account: ~2 rows (approximately)
 /*!40000 ALTER TABLE `user_account` DISABLE KEYS */;
+INSERT INTO `user_account` (`id_user`, `username`, `email_user`, `token_confirmEmail`, `token_forgotPassword`, `user_password`, `company_name`, `jabatan`, `phone_number`, `roles`, `status_user`, `created_at`, `update_at`) VALUES
+	(1, 'testoteronwww', 'itSDeASDASD.dZ@gmail.com', '02ebb3678b76ef908a3a83e35398e1', '', '$2b$10$UoYfwjpEZrBw5Auhwxb7B.hfL8azP.j08OEdyeZs/kDl04An8kcxy', 'GDJ WE', 'CEO', '231123123', 1, 'ON', '2021-01-16 17:06:26', '0000-00-00 00:00:00'),
+	(2, 'testoteronwww', 'dSDASD.dZ@gmail.com', 'ded23a8bfd053f0df85f06a7382297', '', '$2b$10$Cl8ZnYtergF7yyEI5tFJJ.bFfdawJzSQJSY66NyDT8842KWx2NjLu', '', '', '', 0, 'ON', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
 /*!40000 ALTER TABLE `user_account` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

@@ -15,7 +15,8 @@ module.exports = {
         const { skill_name, id_pekerja } = skill[i]
         const setData = {
           skill_name,
-          id_pekerja
+          id_pekerja,
+          create_at: new Date()
         }
         result = await addSkillModel(setData)
       }
