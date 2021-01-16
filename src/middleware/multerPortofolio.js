@@ -1,4 +1,5 @@
 const multer = require('multer')
+const { getPortofolioByIdModel } = require('../model/portoflio')
 const helper = require('../helper/helper')
 
 const storage = multer.diskStorage({
@@ -40,5 +41,21 @@ const uploadFilter = (req, res, next) => {
     next()
   })
 }
+const updateFilter = async (req, res, next) => {
+  const { id } = req.params
+  const checkId = await getPortofolioByIdModel(id)
+  if (checkId.length > 0) {
+    upload(req, res, function (err) {
+      if (err instanceof multer.MulterError) {
+        return helper.response(res, 400, err.message)
+      } else if (err) {
+        return helper.response(res, 400, err.message)
+      }
+      next()
+    })
+  } else {
+    return helper.response(res, 404, `Id ${id} is Not Found`)
+  }
+}
 
-module.exports = uploadFilter
+module.exports = { uploadFilter, updateFilter }

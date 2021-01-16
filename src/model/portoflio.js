@@ -4,12 +4,12 @@ module.exports = {
   editPortofolioModel: (setData, id) => {
     return new Promise((resolve, reject) => {
       connection.query(
-        'UPDATE portofolio SET ? WHERE id_pekerja = ?',
-        [setData, id],
+        `UPDATE portofolio SET ? WHERE id = ${id}`,
+        (setData),
         (error, result) => {
           if (!error) {
             const newResult = {
-              id_pekerja: id,
+              id: id,
               ...setData
             }
             resolve(newResult)
@@ -23,8 +23,7 @@ module.exports = {
   deletePortofolioModel: (id, id_pekerja) => {
     return new Promise((resolve, reject) => {
       connection.query(
-        `DELETE FROM portofolio WHERE id =${id} AND id=${id_pekerja}`,
-        id,
+        `DELETE FROM portofolio WHERE id=${id} AND id_pekerja=${id_pekerja}`,
         (error, result) => {
           !error ? resolve(result) : reject(new Error(error))
         }
@@ -48,6 +47,42 @@ module.exports = {
           }
         }
       )
+    })
+  },
+  getPhotoPortofolioModel: (id) => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        `SELECT image_portofolio AS photo FROM portofolio WHERE id=${id}`,
+        (error, result) => {
+          if (!error) {
+            resolve(result[0].photo)
+          } else {
+            reject(error)
+          }
+        }
+      )
+    })
+  },
+  getPortofolioByIdModel: (id) => {
+    return new Promise((resolve, reject) => {
+      connection.query('SELECT * FROM portofolio WHERE id=?', id, (error, result) => {
+        if (!error) {
+          resolve(result)
+        } else {
+          reject(error)
+        }
+      })
+    })
+  },
+  getPortofolioModel: (id) => {
+    return new Promise((resolve, reject) => {
+      connection.query(`SELECT * FROM portofolio WHERE id_pekerja=${id}`, (error, result) => {
+        if (!error) {
+          resolve(result)
+        } else {
+          reject(error)
+        }
+      })
     })
   }
 }

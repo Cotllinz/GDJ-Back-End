@@ -1,5 +1,13 @@
-const { addPortofolioModel } = require('../model/portoflio')
-const helper = require('../helper/helper') // editPortofolioModel
+const {
+  addPortofolioModel,
+  editPortofolioModel,
+  deletePortofolioModel,
+  getPhotoPortofolioModel,
+  getPortofolioByIdModel,
+  getPortofolioModel
+} = require('../model/portoflio')
+const helper = require('../helper/helper')
+const fs = require('fs')
 
 module.exports = {
   addPortofolio: async (request, response) => {
@@ -15,6 +23,7 @@ module.exports = {
         application_name,
         repo_link,
         type_portofolio,
+        created_at: new Date(),
         image_portofolio:
           request.file === undefined ? '' : request.file.filename
       }
@@ -23,31 +32,96 @@ module.exports = {
     } catch (error) {
       return helper.response(response, 400, 'Bad Request', error)
     }
+  },
+  editPortofolio: async (req, res) => {
+    try {
+      const { id } = req.params
+      const {
+        id_pekerja,
+        application_name,
+        repo_link,
+        type_portofolio
+      } = req.body
+      const photo = await getPhotoPortofolioModel(id)
+      console.log(photo)
+      console.log(id_pekerja)
+      const checkPortofolio = await getPortofolioByIdModel(id)
+      if (checkPortofolio.length > 0) {
+        const setData = {
+          id_pekerja,
+          application_name,
+          repo_link,
+          type_portofolio,
+          updated_at: new Date(),
+          image_portofolio: req.file === undefined ? photo : req.file.filename
+        }
+        console.log(setData.image_portofolio)
+        if (setData.image_portofolio !== photo) {
+          fs.unlink(`./upload/imagePorto/${photo}`, function (err) {
+            if (err) console.log(err)
+            console.log('File deleted')
+          })
+        }
+        console.log(id)
+        const edit = await editPortofolioModel(setData, id)
+        console.log(edit)
+        return helper.response(
+          res,
+          200,
+          `Success update portofolio user by id ${id_pekerja}`,
+          edit
+        )
+      } else {
+        return helper.response(res, 404, 'ID Not Found!')
+      }
+    } catch (error) {
+      console.log(error)
+      return helper.response(res, 400, 'Bad Request', error)
+    }
+  },
+  getPortofolio: async (req, res) => {
+    try {
+      const { id } = req.params
+      const result = await getPortofolioModel(id)
+      if (result.length > 0) {
+        return helper.response(
+          res,
+          200,
+          `Success get portofolio user by id ${id}`,
+          result
+        )
+      } else {
+        return helper.response(res, 404, 'ID Not Found')
+      }
+    } catch (error) {
+      console.log(error)
+      return helper.response(res, 400, 'Bad Request', error)
+    }
+  },
+  deletePortofolio: async (req, res) => {
+    try {
+      let { id, idPekerja } = req.query
+      id = parseInt(id)
+      idPekerja = parseInt(idPekerja)
+      const checkId = await getPortofolioByIdModel(id)
+      if (checkId.length > 0) {
+        const photo = await getPhotoPortofolioModel(id)
+        fs.unlink(`./upload/imagePorto/${photo}`, function (err) {
+          if (err) console.log(err)
+          console.log('File deleted')
+        })
+        await deletePortofolioModel(id, idPekerja)
+        return helper.response(
+          res,
+          200,
+          `Success delete portofolio user by id ${idPekerja}`
+        )
+      } else {
+        return helper.response(res, 404, 'ID Not Found')
+      }
+    } catch (error) {
+      console.log(error)
+      return helper.response(res, 400, 'Bad Request', error)
+    }
   }
 }
-
-// editPortofolio: async (req, res) => {
-//   // `id`, `id_pekerja`, `application_name`, `repo_link`, `type_portofolio`, `image_portofolio`
-//   try {
-//     const { id_pekerja, id, posisi, at_company, date, description } = req.body
-//     const setData = {
-//       id_pekerja,
-//       id,
-//       posisi,
-//       at_company,
-//       date,
-//       description,
-//       updated_at: new Date()
-//     }
-//     console.log(setData.at_company)
-//     const edit = await editExperienceModel(setData, id)
-//     console.log(edit)
-//     return helper.response(
-//       res,
-//       200,
-//       `Success update experience user by id ${id_pekerja}`,
-//       edit
-//     )
-//   } catch (error) {
-//     console.log(error)
-//     return helper.response(res, 400, 'Bad Request', error)

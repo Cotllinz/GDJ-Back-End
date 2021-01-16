@@ -1,7 +1,10 @@
 const router = require('express').Router()
-const { addPortofolio } = require('../controller/portofolio')
-const uploadImg = require('../middleware/multerPortofolio')
+const { addPortofolio, editPortofolio, getPortofolio, deletePortofolio } = require('../controller/portofolio')
+const { uploadFilter, updateFilter } = require('../middleware/multerPortofolio')
 
-router.post('/', uploadImg, addPortofolio)
+router.get('/:id', getPortofolio)
+router.post('/', uploadFilter, addPortofolio)
+router.patch('/:id', updateFilter, editPortofolio)
+router.delete('/delete/', deletePortofolio)
 
 module.exports = router

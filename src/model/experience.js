@@ -12,6 +12,17 @@ module.exports = {
       })
     })
   },
+  getExperienceByIdModel: (id) => {
+    return new Promise((resolve, reject) => {
+      connection.query('SELECT * FROM experiance_pekerja WHERE id=?', id, (error, result) => {
+        if (!error) {
+          resolve(result)
+        } else {
+          reject(error)
+        }
+      })
+    })
+  },
   addExperienceModel: (setData) => {
     return new Promise((resolve, reject) => {
       connection.query(

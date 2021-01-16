@@ -33,5 +33,4 @@ const uploadFilter = async (req, res, next) => {
     return helper.response(res, 404, `ID Job Seeker ${id} is Not Found`)
   }
 }
-
 module.exports = uploadFilter
