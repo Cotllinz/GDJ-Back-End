@@ -3,7 +3,7 @@ const helper = require('../helper/helper')
 
 const storage = multer.diskStorage({
   destination: (request, file, callback) => {
-    callback(null, './upload/userRecruiter/')
+    callback(null, './upload/userRecruiter')
   },
   filename: (request, file, callback) => {
     callback(

@@ -1,4 +1,5 @@
 const multer = require('multer')
+const { getProfilePekerjaModel } = require('../model/user')
 const helper = require('../helper/helper')
 
 const storage = multer.diskStorage({
@@ -16,15 +17,21 @@ const upload = multer({
   limits: { fileSize: maxSize }
 }).single('files')
 
-const uploadFilter = (req, res, next) => {
-  upload(req, res, function (err) {
-    if (err instanceof multer.MulterError) {
-      return helper.response(res, 400, err.message)
-    } else if (err) {
-      return helper.response(res, 400, err.message)
-    }
-    next()
-  })
+const uploadFilter = async (req, res, next) => {
+  const { id } = req.params
+  const checkId = await getProfilePekerjaModel(id)
+  if (checkId.length > 0) {
+    upload(req, res, function (err) {
+      if (err instanceof multer.MulterError) {
+        return helper.response(res, 400, err.message)
+      } else if (err) {
+        return helper.response(res, 400, err.message)
+      }
+      next()
+    })
+  } else {
+    return helper.response(res, 404, `ID Job Seeker ${id} is Not Found`)
+  }
 }
 
 module.exports = uploadFilter
