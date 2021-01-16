@@ -246,10 +246,12 @@ module.exports = {
   },
   login: async (request, response) => {
     try {
-      const { email_user, user_password, roles } = request.body
+      let { email_user, user_password, roles } = request.body
+      roles = parseInt(roles)
       const checkDataLogin = await loginModel(email_user)
+      console.log(roles === checkDataLogin[0].roles)
       if (checkDataLogin.length > 0) {
-        if (roles == checkDataLogin[0].roles) {
+        if (roles === checkDataLogin[0].roles) {
           const checkPasssword = bcrypt.compareSync(
             user_password,
             checkDataLogin[0].user_password
