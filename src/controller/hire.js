@@ -33,7 +33,6 @@ module.exports = {
   notif: async (request, response) => {
     try {
       const { id } = request.params
-      console.log(request.params)
       const hireNotif = await notifModels(id)
       if (hireNotif.length > 0) {
         // client.setex(`notifById:${id}`, 3600, JSON.stringify(hireNotif))
@@ -51,6 +50,7 @@ module.exports = {
         )
       }
     } catch (error) {
+      console.log(error)
       return helper.response(response, 400, 'Bad Request', error)
     }
   }
