@@ -19,5 +19,24 @@ module.exports = {
         }
       )
     })
+  },
+  addPortofolioModel: (setPorto) => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        'INSERT INTO portofolio SET ?',
+        setPorto,
+        (error, result) => {
+          if (!error) {
+            const newResult = {
+              id: result.insertId,
+              ...setPorto
+            }
+            resolve(newResult)
+          } else {
+            reject(new Error(error))
+          }
+        }
+      )
+    })
   }
 }
