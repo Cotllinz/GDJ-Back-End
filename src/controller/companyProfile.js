@@ -1,0 +1,107 @@
+const {
+  getCompanyProfileById,
+  patchCompanyProfile,
+  patchUserModel,
+  getIdRecruiterModel
+} = require('../model/companyProfile')
+const helper = require('../helper/helper')
+const fs = require('fs')
+
+module.exports = {
+  getCompanyProfileById: async (request, response) => {
+    try {
+      const { id } = request.params
+      const result = await getCompanyProfileById(id)
+
+      if (result.length > 0) {
+        return helper.response(
+          response,
+          200,
+          'Succes get Company Profile By Id',
+          result
+        )
+      } else {
+        return helper.response(
+          response,
+          404,
+          `Company Profile By Id : ${id} Not Found`
+        )
+      }
+    } catch (error) {
+      return helper.response(response, 400, 'Bad Request', error)
+    }
+  },
+
+  patchCompanyProfile: async (request, response) => {
+    try {
+      const { id } = request.params
+      const {
+        company_name,
+        city_recruiter,
+        desc_recruiter,
+        social_media,
+        email_user,
+        phone_number,
+        linked_in
+      } = request.body
+      const checkId = await getIdRecruiterModel(id)
+      if (checkId.length > 0) {
+        const getRec = await getCompanyProfileById(checkId[0].id_user)
+        let imageUser
+        if (request.file === undefined) {
+          imageUser = {
+            image_recruiter: getRec[0].image_recruiter
+          }
+        } else if (getRec[0].image_recruiter === '') {
+          imageUser = {
+            image_recruiter:
+              request.file === undefined ? '' : request.file.filename
+          }
+        } else if (request.file.filename !== getRec[0].image_recruiter) {
+          fs.unlink(
+            `./upload/userRecruiter/${getRec[0].image_recruiter}`,
+            (err) => {
+              if (err) throw err
+              console.log(`Success Delete Image ${getRec[0].image_recruiter}`)
+            }
+          )
+          imageUser = {
+            image_recruiter:
+              request.file === undefined ? '' : request.file.filename
+          }
+        }
+
+        const setUser = {
+          company_name,
+          phone_number,
+          email_user,
+          update_at: new Date()
+        }
+        const resultUser = await patchUserModel(setUser, id)
+        const setProfile = {
+          city_recruiter,
+          desc_recruiter,
+          social_media,
+          linked_in,
+          update_at: new Date()
+        }
+        const setProfileImage = { ...setProfile, ...imageUser }
+        const result = await patchCompanyProfile(setProfileImage, id)
+        const lastResult = {
+          resultUser,
+          result
+        }
+        return helper.response(
+          response,
+          200,
+          `Profile By Id: ${id} Success`,
+          lastResult
+        )
+      } else {
+        return helper.response(response, 404, `Profile By Id: ${id} Not Found`)
+      }
+    } catch (error) {
+      return helper.response(response, 400, 'Bad Request', error)
+    }
+  }
+}
