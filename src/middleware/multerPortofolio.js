@@ -2,14 +2,11 @@ const multer = require('multer')
 const helper = require('../helper/helper')
 
 const storage = multer.diskStorage({
-  destination: (request, file, callback) => {
-    callback(null, './upload/userRecruiter')
+  destination: function (req, file, cb) {
+    cb(null, './upload/imagePorto')
   },
-  filename: (request, file, callback) => {
-    callback(
-      null,
-      new Date().toISOString().replace(/:/g, '-') + '-' + file.originalname
-    )
+  filename: function (req, file, cb) {
+    cb(null, new Date().toISOString().replace(/:/g, '-') + file.originalname)
   }
 })
 
@@ -25,18 +22,20 @@ const fileFilter = (request, file, cb) => {
     cb(new Error('Extension file must be PNG , JPEG or webp'), false)
   }
 }
+
+const maxSize = 5 * 1024 * 1024
 const upload = multer({
   storage,
   fileFilter,
-  limits: { fieldSize: 200000 }
-}).single('image_recruiter')
+  limits: { fileSize: maxSize }
+}).single('image_portofolio')
 
-const uploadFilter = (request, response, next) => {
-  upload(request, response, function (err) {
+const uploadFilter = (req, res, next) => {
+  upload(req, res, function (err) {
     if (err instanceof multer.MulterError) {
-      return helper.response(response, 400, err.message)
+      return helper.response(res, 400, err.message)
     } else if (err) {
-      return helper.response(response, 400, err.message)
+      return helper.response(res, 400, err.message)
     }
     next()
   })

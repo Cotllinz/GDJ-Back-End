@@ -143,6 +143,17 @@ module.exports = {
       )
     })
   },
+  getProfilePekerjaModel: (id) => {
+    return new Promise((resolve, reject) => {
+      connection.query(`SELECT * FROM profile_pekerja WHERE id_pekerja=${id}`, (error, result) => {
+        if (!error) {
+          resolve(result)
+        } else {
+          reject(error)
+        }
+      })
+    })
+  },
   editProfilePekerjaModel: (setData, id) => {
     return new Promise((resolve, reject) => {
       connection.query(

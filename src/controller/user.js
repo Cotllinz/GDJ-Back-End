@@ -9,6 +9,7 @@ const {
   confirmEmail,
   codeTokenCheckModel,
   editProfilePekerjaModel,
+  getProfilePekerjaModel,
   getPhotoProfilePekerjaModel,
   updateTokenForgetPass,
   updatePasswordForgot,
@@ -73,7 +74,7 @@ module.exports = {
               from: `"Get Dream Job "${process.env.email}`,
               to: `${email_user}`,
               subject: `Hello ${email_user}, Recruiter`,
-              html: `<a href="localhost${result.token_confirmEmail}">Click This Button</a></a>`
+              html: `<a href="http://localhost:8080/confirm-email/${result.token_confirmEmail}">Click This Button</a></a>`
             }
             transporter.sendMail(mailOPtion, (err, result) => {
               if (err) {
@@ -117,7 +118,7 @@ module.exports = {
               from: `"Get Dream Job "${process.env.email}`,
               to: `${email_user}`,
               subject: `Hello ${email_user}, Job Seaker`,
-              html: `<a href="localhost${result.token_confirmEmail}">Click This Button</a></a>`
+              html: `<a href="http://localhost:8080/confirm-email/${result.token_confirmEmail}">Click This Button</a></a>`
             }
             transporter.sendMail(mailOPtion, (err, result) => {
               if (err) {
@@ -235,11 +236,7 @@ module.exports = {
           update_at: new Date()
         }
         await updatePasswordForgot(token, setData)
-        return helper.response(
-          res,
-          200,
-          'Reset your Password Succesfully'
-        )
+        return helper.response(res, 200, 'Reset your Password Succesfully')
       } else {
         return helper.response(res, 400, 'Your Token Invalid')
       }
@@ -287,49 +284,75 @@ module.exports = {
         return helper.response(response, 400, "You haven't registered yet!")
       }
     } catch (error) {
+      console.log(error)
       return helper.response(response, 400, 'Bad Request!', error)
     }
   },
   editProfilePekerja: async (request, response) => {
     try {
       const { id } = request.params
+      const checkProfilePekerja = await getProfilePekerjaModel(id)
       const photo = await getPhotoProfilePekerjaModel(id)
-      const {
-        fullname_pekerja,
-        job_desk,
-        city_pekerja,
-        status_jobs,
-        work_place,
-        desc_pekerja
-      } = request.body
-      const setData = {
-        id_pekerja: id,
-        fullname_pekerja,
-        job_desk,
-        city_pekerja,
-        status_jobs,
-        work_place,
-        desc_pekerja,
-        image_pekerja:
-          request.file === undefined ? photo : request.file.filename,
-        update_at: new Date()
+      console.log(photo)
+      if (checkProfilePekerja.length > 0) {
+        const {
+          fullname_pekerja,
+          job_desk,
+          city_pekerja,
+          status_jobs,
+          work_place,
+          desc_pekerja
+        } = request.body
+        const setData = {
+          id_pekerja: id,
+          fullname_pekerja,
+          job_desk,
+          city_pekerja,
+          status_jobs,
+          work_place,
+          desc_pekerja,
+          image_pekerja:
+            request.file === undefined ? photo : request.file.filename,
+          update_at: new Date()
+        }
+        console.log(setData.image_pekerja)
+        if (setData.image_pekerja !== photo) {
+          fs.unlink(`./upload/fileUserProfile/${photo}`, function (err) {
+            if (err) console.log(err)
+            console.log('File deleted')
+          })
+        }
+        const result = await editProfilePekerjaModel(setData, id)
+        return helper.response(
+          response,
+          200,
+          `Success update profile user by id ${id}`,
+          result
+        )
+      } else {
+        return helper.response(response, 404, 'ID Not Found!')
       }
-      console.log(setData.image_pekerja)
-      if (setData.image_pekerja !== photo) {
-        fs.unlink(`./upload/fileUserProfile/${photo}`, function (err) {
-          if (err) console.log(err)
-          console.log('File deleted')
-        })
-      }
-      const result = await editProfilePekerjaModel(setData, id)
-      return helper.response(
-        response,
-        200,
-        `Success update profile user by id ${id}`,
-        result
-      )
     } catch (error) {
       return helper.response(response, 400, 'Bad Request', error)
+    }
+  },
+  getProfilePekerja: async (req, res) => {
+    try {
+      const { id } = req.params
+      const result = await getProfilePekerjaModel(id)
+      if (result.length > 0) {
+        return helper.response(
+          res,
+          200,
+          `Success get data profil job seeker by id ${id}`,
+          result
+        )
+      } else {
+        return helper.response(res, 404, 'ID Not Found')
+      }
+    } catch (error) {
+      console.log(error)
+      return helper.response(res, 400, 'Bad Request', error)
     }
   }
 }

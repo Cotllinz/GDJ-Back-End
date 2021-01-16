@@ -1,24 +1,23 @@
 const router = require('express').Router()
-const { isSeeker } = require('../middleware/auth')
+const { authorization, isSeeker } = require('../middleware/auth')
 const uploadFilesUser = require('../middleware/multerUserProfile')
 
 const {
   register,
-  login,
   confirmEmail,
-  editProfilePekerja,
   SendEmailForgotPassword,
-  updatePasswordonForgetPass
+  updatePasswordonForgetPass,
+  login,
+  editProfilePekerja,
+  getProfilePekerja
 } = require('../controller/user')
 
-// const { notifRedis } = require('../middleware/redis')
-
 router.post('/register', register)
-router.post('/login', login)
 router.post('/forgot', SendEmailForgotPassword)
-router.patch('/editprofile/:id', isSeeker, uploadFilesUser, editProfilePekerja)
 router.patch('/resetPassword', updatePasswordonForgetPass)
-// router.get('/notif/:id', notif)
 router.patch('/activation/:code_confirm', confirmEmail)
+router.post('/login', login)
+router.get('/profile/:id', authorization, isSeeker, getProfilePekerja)
+router.patch('/editprofile/:id', authorization, isSeeker, uploadFilesUser, editProfilePekerja)
 
 module.exports = router

@@ -1,15 +1,15 @@
 const connection = require('../config/mysql.js')
 
 module.exports = {
-  addSkillModel: (setData) => {
+  editPortofolioModel: (setData, id) => {
     return new Promise((resolve, reject) => {
       connection.query(
-        'INSERT INTO skills_pekerja SET ?',
-        setData,
+        'UPDATE portofolio SET ? WHERE id_pekerja = ?',
+        [setData, id],
         (error, result) => {
           if (!error) {
             const newResult = {
-              id: result.insertId,
+              id_pekerja: id,
               ...setData
             }
             resolve(newResult)
@@ -20,10 +20,10 @@ module.exports = {
       )
     })
   },
-  getSkillModel: (id) => {
+  deletePortofolioModel: (id, id_pekerja) => {
     return new Promise((resolve, reject) => {
       connection.query(
-        'SELECT skills_pekerja.skill_name FROM skills_pekerja WHERE id_pekerja = ?',
+        `DELETE FROM portofolio WHERE id =${id} AND id=${id_pekerja}`,
         id,
         (error, result) => {
           !error ? resolve(result) : reject(new Error(error))
@@ -31,27 +31,16 @@ module.exports = {
       )
     })
   },
-  deleteSkillModel: (id, idSkill) => {
+  addPortofolioModel: (setPorto) => {
     return new Promise((resolve, reject) => {
       connection.query(
-        'DELETE FROM skills_pekerja WHERE id_pekerja = ? AND id = ?',
-        [id, idSkill],
-        (error, result) => {
-          !error ? resolve(result) : reject(new Error(error))
-        }
-      )
-    })
-  },
-  editSkillModel: (setData, id) => {
-    return new Promise((resolve, reject) => {
-      connection.query(
-        'UPDATE skills_pekerja SET ? WHERE id_pekerja = ?',
-        [setData, id],
+        'INSERT INTO portofolio SET ?',
+        setPorto,
         (error, result) => {
           if (!error) {
             const newResult = {
-              id_pekerja: id,
-              ...setData
+              id: result.insertId,
+              ...setPorto
             }
             resolve(newResult)
           } else {
