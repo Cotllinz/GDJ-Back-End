@@ -248,7 +248,7 @@ module.exports = {
       return helper.response(res, 400, 'Bad Request!', err)
     }
   },
-  loginRequiter: async (request, response) => {
+  login: async (request, response) => {
     try {
       const { email_user, user_password } = request.body
       const checkDataLogin = await loginModel(email_user)
@@ -266,16 +266,14 @@ module.exports = {
               roles,
               status_user
             }
-            if (roles === 1) {
-              const token = jwt.sign(payload, process.env.ACCESS_, {
-                expiresIn: '1hr'
-              })
-              const result = {
-                ...payload,
-                token
-              }
-              return helper.response(response, 200, 'Successs Login!', result)
+            const token = jwt.sign(payload, process.env.ACCESS, {
+              expiresIn: '1hr'
+            })
+            const result = {
+              ...payload,
+              token
             }
+            return helper.response(response, 200, 'Successs Login!', result)
           } else {
             return helper.response(
               response,
@@ -291,51 +289,6 @@ module.exports = {
       }
     } catch (error) {
       console.log(error)
-      return helper.response(response, 400, 'Bad Request!', error)
-    }
-  },
-  loginJobSeeker: async (request, response) => {
-    try {
-      const { email_user, user_password } = request.body
-      const checkDataLogin = await loginModel(email_user)
-      if (checkDataLogin.length > 0) {
-        const checkPasssword = bcrypt.compareSync(
-          user_password,
-          checkDataLogin[0].user_password
-        )
-        if (checkPasssword) {
-          const { id_user, email_user, roles, status_user } = checkDataLogin[0]
-          if (status_user === 'ON') {
-            const payload = {
-              id_user,
-              email_user,
-              roles,
-              status_user
-            }
-            if (roles === 0) {
-              const token = jwt.sign(payload, process.env.ACCESS_, {
-                expiresIn: '1hr'
-              })
-              const result = {
-                ...payload,
-                token
-              }
-              return helper.response(response, 200, 'Successs Login!', result)
-            }
-          } else {
-            return helper.response(
-              response,
-              400,
-              "You haven't activated your account yet"
-            )
-          }
-        } else {
-          return helper.response(response, 400, 'Wrong Password!')
-        }
-      } else {
-        return helper.response(response, 400, "You haven't registered yet!")
-      }
-    } catch (error) {
       return helper.response(response, 400, 'Bad Request!', error)
     }
   },

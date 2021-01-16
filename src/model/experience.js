@@ -42,5 +42,16 @@ module.exports = {
         }
       })
     })
+  },
+  deleteExperienceModel: (id, id_pekerja) => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        `DELETE FROM experiance_pekerja WHERE id=${id} AND id_pekerja=${id_pekerja}`,
+        id,
+        (error, result) => {
+          !error ? resolve(result) : reject(new Error(error))
+        }
+      )
+    })
   }
 }

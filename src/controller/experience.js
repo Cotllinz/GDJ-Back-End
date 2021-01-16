@@ -1,7 +1,8 @@
 const {
   addExperienceModel,
   editExperienceModel,
-  getExperienceModel
+  getExperienceModel,
+  deleteExperienceModel
 } = require('../model/experience')
 const helper = require('../helper/helper')
 
@@ -84,4 +85,12 @@ module.exports = {
       return helper.response(res, 400, 'Bad Request', error)
     }
   }
+  // deleteExperienceModel: async (req, res) => {
+  //   try{
+  //     const {id_pekerja, id} = req.body
+  //     const checkProfile = await getExperienceModel(id_pekerja)
+  //   } catch(error) {
+
+  //   }
+  // }
 }
