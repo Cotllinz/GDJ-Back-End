@@ -249,7 +249,6 @@ module.exports = {
       let { email_user, user_password, roles } = request.body
       roles = parseInt(roles)
       const checkDataLogin = await loginModel(email_user)
-      console.log(roles === checkDataLogin[0].roles)
       if (checkDataLogin.length > 0) {
         if (roles === checkDataLogin[0].roles) {
           const checkPasssword = bcrypt.compareSync(
@@ -310,15 +309,18 @@ module.exports = {
       const { id } = request.params
       const checkProfilePekerja = await getProfilePekerjaModel(id)
       const photo = await getPhotoProfilePekerjaModel(id)
-      console.log(photo)
       if (checkProfilePekerja.length > 0) {
         const {
           fullname_pekerja,
           job_desk,
+          job_require,
           city_pekerja,
           status_jobs,
           work_place,
-          desc_pekerja
+          desc_pekerja,
+          instagram,
+          linked,
+          github
         } = request.body
         const setData = {
           id_pekerja: id,
@@ -327,6 +329,10 @@ module.exports = {
           city_pekerja,
           status_jobs,
           work_place,
+          job_require,
+          instagram,
+          linked,
+          github,
           desc_pekerja,
           image_pekerja:
             request.file === undefined ? photo : request.file.filename,
