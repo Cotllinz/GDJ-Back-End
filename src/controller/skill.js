@@ -22,7 +22,6 @@ module.exports = {
       }
       return helper.response(response, 200, 'Success add your skill', result)
     } catch (error) {
-      console.log(error)
       return helper.response(response, 400, 'Bad Request', error)
     }
   },
@@ -72,7 +71,6 @@ module.exports = {
         return helper.response(response, 404, `Skill by id : ${id} Not Found`)
       }
     } catch (error) {
-      console.log(error)
       return helper.response(response, 400, 'Bad Request', error)
     }
   }

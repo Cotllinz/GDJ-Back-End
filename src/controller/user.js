@@ -139,7 +139,6 @@ module.exports = {
         }
       }
     } catch (error) {
-      console.log(error)
       return helper.response(res, 400, 'Bad Request', error)
     }
   },
@@ -178,7 +177,6 @@ module.exports = {
         )
       }
     } catch (err) {
-      console.log(err)
       return helper.response(res, 400, 'Bad Request!', err)
     }
   },
@@ -300,7 +298,6 @@ module.exports = {
         return helper.response(response, 400, "You haven't registered yet!")
       }
     } catch (error) {
-      console.log(error)
       return helper.response(response, 400, 'Bad Request!', error)
     }
   },
@@ -338,11 +335,11 @@ module.exports = {
             request.file === undefined ? photo : request.file.filename,
           update_at: new Date()
         }
-        console.log(setData.image_pekerja)
         if (setData.image_pekerja !== photo) {
           fs.unlink(`./upload/fileUserProfile/${photo}`, function (err) {
-            if (err) console.log(err)
-            console.log('File deleted')
+            if (err) {
+              return helper.response(response, 404, 'Add Image Invalid')
+            }
           })
         }
         const result = await editProfilePekerjaModel(setData, id)
@@ -374,7 +371,6 @@ module.exports = {
         return helper.response(res, 404, 'ID Not Found')
       }
     } catch (error) {
-      console.log(error)
       return helper.response(res, 400, 'Bad Request', error)
     }
   }

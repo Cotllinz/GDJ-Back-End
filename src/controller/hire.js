@@ -5,7 +5,6 @@ module.exports = {
   hire: async (request, response) => {
     try {
       const { id_recruiter, id_pekerja, jobs_needed, desc_jobs } = request.body
-      console.log(request.body)
       if (id_pekerja && jobs_needed && desc_jobs) {
         const setData = {
           id_recruiter,
@@ -26,7 +25,6 @@ module.exports = {
         return helper.response(response, 400, 'All data must be filled in')
       }
     } catch (error) {
-      console.log(error)
       return helper.response(response, 400, 'Bad Request', error)
     }
   },
@@ -50,7 +48,6 @@ module.exports = {
         )
       }
     } catch (error) {
-      console.log(error)
       return helper.response(response, 400, 'Bad Request', error)
     }
   }

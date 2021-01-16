@@ -6,8 +6,10 @@ module.exports = {
     if (token) {
       token = token.split(' ')[1]
       jwt.verify(token, process.env.ACCESS, (error, result) => {
-        if ((error && error.name === 'JsonWebTokenError') || (error && error.name === 'TokenExpiredError')) {
-          console.log(error)
+        if (
+          (error && error.name === 'JsonWebTokenError') ||
+          (error && error.name === 'TokenExpiredError')
+        ) {
           return helper.response(response, 403, error.message)
         } else {
           request.token = result
@@ -19,14 +21,14 @@ module.exports = {
     }
   },
   isReqruiter: (request, response, next) => {
-    if (request.token.roles === 1) {
+    if (request.token.roles === 1 && request.token.status_user === 'ON') {
       next()
     } else {
       return helper.response(response, 403, "You aren't authorized!")
     }
   },
   isSeeker: (request, response, next) => {
-    if (request.token.roles === 0) {
+    if (request.token.roles === 0 && request.token.status_user === 'ON') {
       next()
     } else {
       return helper.response(response, 403, "You aren't authorized!")
