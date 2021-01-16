@@ -16,21 +16,16 @@
 CREATE DATABASE IF NOT EXISTS `gdj_database` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
 USE `gdj_database`;
 
--- Dumping structure for table gdj_database. skills_pekerja
-CREATE TABLE IF NOT EXISTS ` skills_pekerja` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `id_pekerja` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- Dumping data for table gdj_database. skills_pekerja: ~0 rows (approximately)
-/*!40000 ALTER TABLE ` skills_pekerja` DISABLE KEYS */;
-/*!40000 ALTER TABLE ` skills_pekerja` ENABLE KEYS */;
-
 -- Dumping structure for table gdj_database.experiance_pekerja
 CREATE TABLE IF NOT EXISTS `experiance_pekerja` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_pekerja` int(11) NOT NULL,
+  `posisi` varchar(100) NOT NULL,
+  `at_company` varchar(50) NOT NULL,
+  `date` date NOT NULL,
+  `description` varchar(150) NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -60,6 +55,12 @@ INSERT INTO `hired_jobs` (`id`, `id_recruiter`, `id_pekerja`, `files`, `jobs_nee
 CREATE TABLE IF NOT EXISTS `portofolio` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_pekerja` int(11) NOT NULL,
+  `application_name` varchar(50) NOT NULL,
+  `repo_link` varchar(50) NOT NULL,
+  `type_portofolio` varchar(30) NOT NULL,
+  `image_portofolio` varchar(150) NOT NULL,
+  `create_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `Column 8` datetime NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -78,6 +79,9 @@ CREATE TABLE IF NOT EXISTS `profile_pekerja` (
   `work_place` varchar(50) NOT NULL,
   `desc_pekerja` varchar(150) NOT NULL,
   `image_pekerja` varchar(150) NOT NULL,
+  `instagram` varchar(100) NOT NULL,
+  `linked` varchar(100) NOT NULL,
+  `github` varchar(100) NOT NULL,
   `created_at` datetime NOT NULL,
   `update_at` datetime NOT NULL,
   PRIMARY KEY (`id_pekerja`)
@@ -103,6 +107,17 @@ CREATE TABLE IF NOT EXISTS `profile_recruiter` (
 -- Dumping data for table gdj_database.profile_recruiter: ~0 rows (approximately)
 /*!40000 ALTER TABLE `profile_recruiter` DISABLE KEYS */;
 /*!40000 ALTER TABLE `profile_recruiter` ENABLE KEYS */;
+
+-- Dumping structure for table gdj_database.skills_pekerja
+CREATE TABLE IF NOT EXISTS `skills_pekerja` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_pekerja` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Dumping data for table gdj_database.skills_pekerja: ~0 rows (approximately)
+/*!40000 ALTER TABLE `skills_pekerja` DISABLE KEYS */;
+/*!40000 ALTER TABLE `skills_pekerja` ENABLE KEYS */;
 
 -- Dumping structure for table gdj_database.user_account
 CREATE TABLE IF NOT EXISTS `user_account` (
