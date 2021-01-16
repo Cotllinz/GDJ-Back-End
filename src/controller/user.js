@@ -205,7 +205,7 @@ module.exports = {
           from: `"Get Dream Job "${process.env.email}`,
           to: `${email}`,
           subject: `Hello ${email}`,
-          html: `<a href="localhost${result.token_forgotPassword}">Click This link to update your password</a></a>`
+          html: `<a href="http://localhost:8080/forgot/${result.token_forgotPassword}">Click This link to update your password</a></a>`
         }
         transporter.sendMail(mailOPtion, (err, result) => {
           if (err) {
