@@ -1,6 +1,17 @@
 const connection = require('../config/mysql.js')
 
 module.exports = {
+  getExperienceModel: (id) => {
+    return new Promise((resolve, reject) => {
+      connection.query(`SELECT * FROM experiance_pekerja WHERE id_pekerja=${id}`, (error, result) => {
+        if (!error) {
+          resolve(result)
+        } else {
+          reject(error)
+        }
+      })
+    })
+  },
   addExperienceModel: (setData) => {
     return new Promise((resolve, reject) => {
       connection.query(
