@@ -15,13 +15,13 @@ module.exports = {
         const { skill_name, id_pekerja } = skill[i]
         const setData = {
           skill_name,
-          id_pekerja
+          id_pekerja,
+          create_at: new Date()
         }
         result = await addSkillModel(setData)
       }
       return helper.response(response, 200, 'Success add your skill', result)
     } catch (error) {
-      console.log(error)
       return helper.response(response, 400, 'Bad Request', error)
     }
   },
@@ -71,7 +71,6 @@ module.exports = {
         return helper.response(response, 404, `Skill by id : ${id} Not Found`)
       }
     } catch (error) {
-      console.log(error)
       return helper.response(response, 400, 'Bad Request', error)
     }
   }

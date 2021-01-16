@@ -23,14 +23,12 @@ module.exports = {
         return helper.response(res, 404, 'ID Not Found')
       }
     } catch (error) {
-      console.log(error)
       return helper.response(res, 400, 'Bad Request', error)
     }
   },
   addExperience: async (req, res) => {
     try {
       const experience = req.body
-      console.log(experience)
       let resultExperience
       for (let i = 0; i < experience.length; i++) {
         const {
@@ -108,7 +106,6 @@ module.exports = {
         return helper.response(res, 404, 'ID Not Found')
       }
     } catch (error) {
-      console.log(error)
       return helper.response(res, 400, 'Bad Request', error)
     }
   }

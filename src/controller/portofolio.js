@@ -25,7 +25,8 @@ module.exports = {
         type_portofolio,
         created_at: new Date(),
         image_portofolio:
-          request.file === undefined ? '' : request.file.filename
+          request.file === undefined ? '' : request.file.filename,
+        create_at: new Date()
       }
       const result = await addPortofolioModel(setPorto)
       return helper.response(response, 200, 'Success Add Portofolio', result)

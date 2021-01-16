@@ -62,7 +62,6 @@ module.exports = {
             `./upload/userRecruiter/${getRec[0].image_recruiter}`,
             (err) => {
               if (err) throw err
-              console.log(`Success Delete Image ${getRec[0].image_recruiter}`)
             }
           )
           imageUser = {

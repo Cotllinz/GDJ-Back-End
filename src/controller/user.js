@@ -139,7 +139,6 @@ module.exports = {
         }
       }
     } catch (error) {
-      console.log(error)
       return helper.response(res, 400, 'Bad Request', error)
     }
   },
@@ -178,7 +177,6 @@ module.exports = {
         )
       }
     } catch (err) {
-      console.log(err)
       return helper.response(res, 400, 'Bad Request!', err)
     }
   },
@@ -207,17 +205,21 @@ module.exports = {
           from: `"Get Dream Job "${process.env.email}`,
           to: `${email}`,
           subject: `Hello ${email}`,
-          html: `<a href="localhost${result.token_forgotPassword}">Click This Button for update ur password</a></a>`
+          html: `<a href="http://localhost:8080/forgot/${result.token_forgotPassword}">Click This link to update your password</a></a>`
         }
         transporter.sendMail(mailOPtion, (err, result) => {
           if (err) {
             return helper.response(res, 400, 'Error Send Email', err)
           } else {
-            return helper.response(res, 200, 'Success Send Email')
+            return helper.response(
+              res,
+              200,
+              'Check your email for the link to re-new your password'
+            )
           }
         })
       } else {
-        return helper.response(res, 400, "You haven't registered yet!")
+        return helper.response(res, 400, 'This email is not registered')
       }
     } catch (err) {
       return helper.response(res, 400, 'Bad Request!', err)
@@ -250,45 +252,60 @@ module.exports = {
   },
   login: async (request, response) => {
     try {
-      const { email_user, user_password } = request.body
+      let { email_user, user_password, roles } = request.body
+      roles = parseInt(roles)
       const checkDataLogin = await loginModel(email_user)
       if (checkDataLogin.length > 0) {
-        const checkPasssword = bcrypt.compareSync(
-          user_password,
-          checkDataLogin[0].user_password
-        )
-        if (checkPasssword) {
-          const { id_user, email_user, roles, status_user } = checkDataLogin[0]
-          if (status_user === 'ON') {
-            const payload = {
+        if (roles === checkDataLogin[0].roles) {
+          const checkPasssword = bcrypt.compareSync(
+            user_password,
+            checkDataLogin[0].user_password
+          )
+          if (checkPasssword) {
+            const {
               id_user,
               email_user,
               roles,
               status_user
+            } = checkDataLogin[0]
+            if (status_user === 'ON') {
+              const payload = {
+                id_user,
+                email_user,
+                roles,
+                status_user
+              }
+              const token = jwt.sign(payload, process.env.ACCESS, {
+                expiresIn: '1hr'
+              })
+              const result = {
+                ...payload,
+                token
+              }
+              return helper.response(response, 200, 'Successs Login!', result)
+            } else {
+              return helper.response(
+                response,
+                400,
+                "You haven't activated your account yet"
+              )
             }
-            const token = jwt.sign(payload, process.env.ACCESS, {
-              expiresIn: '1hr'
-            })
-            const result = {
-              ...payload,
-              token
-            }
-            return helper.response(response, 200, 'Successs Login!', result)
           } else {
-            return helper.response(
-              response,
-              400,
-              "You haven't activated your account yet"
-            )
+            return helper.response(response, 400, 'Wrong Password!')
           }
         } else {
-          return helper.response(response, 400, 'Wrong Password!')
+          let infoError
+          if (checkDataLogin[0].roles === 0) {
+            infoError = 'Your Email Not Register as Recruiter'
+          } else {
+            infoError = 'Your Email Not Register as Job Seaker'
+          }
+          return helper.response(response, 400, `${infoError}`)
         }
       } else {
         return helper.response(response, 400, "You haven't registered yet!")
       }
     } catch (error) {
-      console.log(error)
       return helper.response(response, 400, 'Bad Request!', error)
     }
   },
@@ -297,15 +314,18 @@ module.exports = {
       const { id } = request.params
       const checkProfilePekerja = await getProfilePekerjaModel(id)
       const photo = await getPhotoProfilePekerjaModel(id)
-      console.log(photo)
       if (checkProfilePekerja.length > 0) {
         const {
           fullname_pekerja,
           job_desk,
+          job_require,
           city_pekerja,
           status_jobs,
           work_place,
-          desc_pekerja
+          desc_pekerja,
+          instagram,
+          linked,
+          github
         } = request.body
         const setData = {
           id_pekerja: id,
@@ -314,16 +334,20 @@ module.exports = {
           city_pekerja,
           status_jobs,
           work_place,
+          job_require,
+          instagram,
+          linked,
+          github,
           desc_pekerja,
           image_pekerja:
             request.file === undefined ? photo : request.file.filename,
           update_at: new Date()
         }
-        console.log(setData.image_pekerja)
         if (setData.image_pekerja !== photo) {
           fs.unlink(`./upload/fileUserProfile/${photo}`, function (err) {
-            if (err) console.log(err)
-            console.log('File deleted')
+            if (err) {
+              return helper.response(response, 404, 'Add Image Invalid')
+            }
           })
         }
         const result = await editProfilePekerjaModel(setData, id)
@@ -355,7 +379,6 @@ module.exports = {
         return helper.response(res, 404, 'ID Not Found')
       }
     } catch (error) {
-      console.log(error)
       return helper.response(res, 400, 'Bad Request', error)
     }
   }
