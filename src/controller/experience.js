@@ -1,10 +1,9 @@
 const {
   addExperienceModel,
   editExperienceModel,
-  getExperienceModel,
-  deleteExperienceModel
+  getExperienceModel
 } = require('../model/experience')
-const helper = require('../helper/helper')
+const helper = require('../helper/helper') // deleteExperienceModel
 
 module.exports = {
   getExperience: async (req, res) => {
