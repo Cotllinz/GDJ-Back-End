@@ -9,6 +9,7 @@ const {
   confirmEmail,
   codeTokenCheckModel,
   editProfilePekerjaModel,
+  getProfilePekerjaModel,
   getPhotoProfilePekerjaModel,
   updateTokenForgetPass,
   updatePasswordForgot,
@@ -341,9 +342,10 @@ module.exports = {
   editProfilePekerja: async (request, response) => {
     try {
       const { id } = request.params
+      const checkProfilePekerja = await getProfilePekerjaModel(id)
       const photo = await getPhotoProfilePekerjaModel(id)
       console.log(photo)
-      if (photo !== undefined) {
+      if (checkProfilePekerja.length > 0) {
         const {
           fullname_pekerja,
           job_desk,

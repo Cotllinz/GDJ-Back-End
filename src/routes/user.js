@@ -18,6 +18,6 @@ router.patch('/resetPassword', updatePasswordonForgetPass)
 router.patch('/activation/:code_confirm', confirmEmail)
 router.post('/loginrequiter', authorization, isReqruiter, loginRequiter)
 router.post('/loginjobseeker', authorization, isSeeker, loginJobSeeker)
-router.patch('/editprofile/:id', authorization, isSeeker, uploadFilesUser, editProfilePekerja)
-
+router.patch('/editprofile/:id', uploadFilesUser, editProfilePekerja)
+// authorization, isSeeker,
 module.exports = router
