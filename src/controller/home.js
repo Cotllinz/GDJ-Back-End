@@ -7,6 +7,7 @@ const {
   getSkill,
   getDataBySkillSortingModel,
   getDataCountModel,
+  getCountSkillModel,
   getDataLimit
 } = require('../model/home')
 
@@ -81,8 +82,10 @@ module.exports = {
       let { page, limit } = request.query
       page = parseInt(page)
       limit = parseInt(limit)
-      const totalData = await getDataCountModel()
-      console.log(totalData)
+
+      const Data = await getCountSkillModel()
+      const totalData = Data.length
+
       const totalPage = Math.ceil(totalData / limit)
       const offset = page * limit - limit
       const prevLink =
@@ -167,6 +170,7 @@ module.exports = {
         newPage
       )
     } catch (err) {
+      console.log(err)
       return helper.response(res, 400, 'Bad Request', err)
     }
   }

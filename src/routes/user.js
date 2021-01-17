@@ -1,6 +1,7 @@
 const router = require('express').Router()
 const { authorization, isSeeker } = require('../middleware/auth')
 const uploadFilesUser = require('../middleware/multerUserProfile')
+const { getProfilePekerjaByIdRedis, clearRedis } = require('../middleware/redis.js')
 
 const {
   register,
@@ -17,7 +18,7 @@ router.post('/forgot', SendEmailForgotPassword)
 router.patch('/resetPassword', updatePasswordonForgetPass)
 router.patch('/activation/:code_confirm', confirmEmail)
 router.post('/login', login)
-router.get('/profile/:id', authorization, isSeeker, getProfilePekerja)
-router.patch('/editprofile/:id', authorization, isSeeker, uploadFilesUser, editProfilePekerja)
+router.get('/profile/:id', authorization, isSeeker, getProfilePekerjaByIdRedis, getProfilePekerja)
+router.patch('/editprofile/:id', authorization, isSeeker, uploadFilesUser, clearRedis, editProfilePekerja)
 
 module.exports = router

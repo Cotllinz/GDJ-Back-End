@@ -1,10 +1,16 @@
 const router = require('express').Router()
+const { authorization, isSeeker } = require('../middleware/auth')
+const {
+  getExperience,
+  addExperience,
+  editExperience,
+  deleteExperience
+} = require('../controller/experience')
+const { getExperienceByIdRedis, clearRedis } = require('../middleware/redis')
 
-const { getExperience, addExperience, editExperience, deleteExperience } = require('../controller/experience')
-
-router.get('/:id', getExperience)
-router.post('/', addExperience)
-router.patch('/edit', editExperience)
-router.delete('/delete/', deleteExperience)
+router.get('/:id', authorization, isSeeker, getExperienceByIdRedis, getExperience)
+router.post('/', authorization, isSeeker, clearRedis, addExperience)
+router.patch('/edit', authorization, isSeeker, clearRedis, editExperience)
+router.delete('/delete/', authorization, isSeeker, clearRedis, deleteExperience)
 
 module.exports = router

@@ -1,6 +1,8 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const helper = require('../helper/helper')
+const redis = require('redis')
+const client = redis.createClient()
 const {
   seekerRegisModel,
   loginModel,
@@ -74,7 +76,7 @@ module.exports = {
               from: `"Get Dream Job "${process.env.email}`,
               to: `${email_user}`,
               subject: `Hello ${email_user}, Recruiter`,
-              html: `<a href="localhost${result.token_confirmEmail}">Click This Button</a></a>`
+              html: `<a href="http://localhost:8080/confirm-email/${result.token_confirmEmail}">Click This Button</a></a>`
             }
             transporter.sendMail(mailOPtion, (err, result) => {
               if (err) {
@@ -118,7 +120,7 @@ module.exports = {
               from: `"Get Dream Job "${process.env.email}`,
               to: `${email_user}`,
               subject: `Hello ${email_user}, Job Seaker`,
-              html: `<a href="localhost${result.token_confirmEmail}">Click This Button</a></a>`
+              html: `<a href="http://localhost:8080/confirm-email/${result.token_confirmEmail}">Click This Button</a></a>`
             }
             transporter.sendMail(mailOPtion, (err, result) => {
               if (err) {
@@ -238,11 +240,7 @@ module.exports = {
           update_at: new Date()
         }
         await updatePasswordForgot(token, setData)
-        return helper.response(
-          res,
-          200,
-          'Reset your Password Succesfully'
-        )
+        return helper.response(res, 200, 'Reset your Password Succesfully')
       } else {
         return helper.response(res, 400, 'Your Token Invalid')
       }
@@ -369,6 +367,7 @@ module.exports = {
       const { id } = req.params
       const result = await getProfilePekerjaModel(id)
       if (result.length > 0) {
+        client.setex(`GDJprofilepekerjabyid:${id}`, 1800, JSON.stringify(result))
         return helper.response(
           res,
           200,

@@ -1,5 +1,7 @@
 const helper = require('../helper/helper')
 const { hireModel, notifModels } = require('../model/hire')
+const redis = require('redis')
+const client = redis.createClient()
 
 module.exports = {
   hire: async (request, response) => {
@@ -33,7 +35,7 @@ module.exports = {
       const { id } = request.params
       const hireNotif = await notifModels(id)
       if (hireNotif.length > 0) {
-        // client.setex(`notifById:${id}`, 3600, JSON.stringify(hireNotif))
+        client.setex(`GDJnotifById:${id}`, 1800, JSON.stringify(hireNotif))
         return helper.response(
           response,
           200,
