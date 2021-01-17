@@ -10,6 +10,8 @@ const {
   getCountSkillModel,
   getDataLimit
 } = require('../model/home')
+const redis = require('redis')
+const client = redis.createClient()
 
 module.exports = {
   searchSort: async (request, response) => {
@@ -65,6 +67,15 @@ module.exports = {
       for (let i = 0; i < result.length; i++) {
         result[i].skills = await getSkill(result[i].id_pekerja)
       }
+      const newData = {
+        result,
+        newPage
+      }
+      client.setex(
+        `GDJsearchsort:${JSON.stringify(request.query)}`,
+        1800,
+        JSON.stringify(newData)
+      )
       return helper.response(
         response,
         200,
@@ -112,6 +123,15 @@ module.exports = {
       for (let i = 0; i < result.length; i++) {
         result[i].skills = await getSkill(result[i].id_pekerja)
       }
+      const newData = {
+        result,
+        pageInfo
+      }
+      client.setex(
+        `GDJdatabyskillsorting:${JSON.stringify(request.query)}`,
+        1800,
+        JSON.stringify(newData)
+      )
       return helper.response(
         response,
         200,
@@ -162,6 +182,15 @@ module.exports = {
       for (let i = 0; i < result.length; i++) {
         result[i].skills = await getSkill(result[i].id_pekerja)
       }
+      const newData = {
+        result,
+        newPage
+      }
+      client.setex(
+        `GDJdatabylimit:${JSON.stringify(req.query)}`,
+        1800,
+        JSON.stringify(newData)
+      )
       return helper.response(
         res,
         200,
