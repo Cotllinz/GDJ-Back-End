@@ -1,8 +1,8 @@
 module.exports = {
-  response: (response, status, massage, data, pagination) => {
+  response: (response, status, message, data, pagination) => {
     const result = {}
     result.status = status || 200
-    result.massage = massage
+    result.message = message
     result.data = data
     result.pagination = pagination
 

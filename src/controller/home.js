@@ -1,9 +1,12 @@
 const helper = require('../helper/helper')
 const qs = require('querystring')
+require('dotenv').config()
 const {
   searchSorthModel,
   getSearchCountModel,
-  getSkill
+  getSkill,
+  getDataBySkillSortingModel,
+  getDataCountModel
 } = require('../model/home')
 
 module.exports = {
