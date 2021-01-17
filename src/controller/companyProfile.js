@@ -12,7 +12,6 @@ module.exports = {
     try {
       const { id } = request.params
       const result = await getCompanyProfileById(id)
-
       if (result.length > 0) {
         return helper.response(
           response,

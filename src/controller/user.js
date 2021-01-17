@@ -274,7 +274,7 @@ module.exports = {
                 status_user
               }
               const token = jwt.sign(payload, process.env.ACCESS, {
-                expiresIn: '1hr'
+                expiresIn: '6hr'
               })
               const result = {
                 ...payload,
@@ -367,7 +367,11 @@ module.exports = {
       const { id } = req.params
       const result = await getProfilePekerjaModel(id)
       if (result.length > 0) {
-        client.setex(`GDJprofilepekerjabyid:${id}`, 1800, JSON.stringify(result))
+        client.setex(
+          `GDJprofilepekerjabyid:${id}`,
+          1800,
+          JSON.stringify(result)
+        )
         return helper.response(
           res,
           200,
