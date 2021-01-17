@@ -5,6 +5,8 @@ const {
   deleteSkillModel,
   editSkillModel
 } = require('../model/skill')
+const redis = require('redis')
+const client = redis.createClient()
 
 module.exports = {
   addSkill: async (request, response) => {
@@ -34,6 +36,7 @@ module.exports = {
       const { id } = request.params
       const result = await getSkillModel(id)
       if (result.length > 0) {
+        client.setex(`GDJskill:${id}`, 1800, JSON.stringify(result))
         return helper.response(response, 200, 'Success Get Skill By Id', result)
       } else {
         return helper.response(
