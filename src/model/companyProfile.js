@@ -4,7 +4,7 @@ module.exports = {
   getCompanyProfileById: (id) => {
     return new Promise((resolve, reject) => {
       connection.query(
-        'SELECT company_name, jabatan, city_recruiter, desc_recruiter, email_user, social_media,phone_number, linked_in FROM profile_recruiter join user_account on id_user = id_recruiter  WHERE id_recruiter = ?',
+        'SELECT image_recruiter,company_name, jabatan, city_recruiter, desc_recruiter, email_user, social_media,phone_number, linked_in FROM profile_recruiter join user_account on id_user = id_recruiter  WHERE id_recruiter = ?',
         id,
         (error, result) => {
           !error ? resolve(result) : reject(new Error(error))
