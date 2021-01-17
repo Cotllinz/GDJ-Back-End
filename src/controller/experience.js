@@ -6,6 +6,8 @@ const {
   deleteExperienceModel
 } = require('../model/experience')
 const helper = require('../helper/helper')
+const redis = require('redis')
+const client = redis.createClient()
 
 module.exports = {
   getExperience: async (req, res) => {
@@ -13,10 +15,11 @@ module.exports = {
       const { id } = req.params
       const result = await getExperienceModel(id)
       if (result.length > 0) {
+        client.setex(`GDJexperiencebyid:${id}`, 1800, JSON.stringify(result))
         return helper.response(
           res,
           200,
-          `Success update experiences user by id ${id}`,
+          `Success get experiences user by id ${id}`,
           result
         )
       } else {

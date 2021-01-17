@@ -6,7 +6,7 @@ const {
 } = require('../controller/companyProfile')
 const uploadImage = require('../middleware/multer')
 
-router.get('/:id', authorization, getCompanyProfileById)
+router.get('/:id', authorization, isRecruiter, getCompanyProfileById)
 
 router.patch(
   '/:id',

@@ -1,6 +1,8 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const helper = require('../helper/helper')
+const redis = require('redis')
+const client = redis.createClient()
 const {
   seekerRegisModel,
   loginModel,
@@ -365,6 +367,7 @@ module.exports = {
       const { id } = req.params
       const result = await getProfilePekerjaModel(id)
       if (result.length > 0) {
+        client.setex(`GDJprofilepekerjabyid:${id}`, 1800, JSON.stringify(result))
         return helper.response(
           res,
           200,

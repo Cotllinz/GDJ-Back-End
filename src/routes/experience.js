@@ -6,10 +6,11 @@ const {
   editExperience,
   deleteExperience
 } = require('../controller/experience')
+const { getExperienceByIdRedis, clearRedis } = require('../middleware/redis')
 
-router.get('/:id', authorization, getExperience)
-router.post('/', authorization, isSeeker, addExperience)
-router.patch('/edit', authorization, isSeeker, editExperience)
-router.delete('/delete/', authorization, isSeeker, deleteExperience)
+router.get('/:id', authorization, isSeeker, getExperienceByIdRedis, getExperience)
+router.post('/', authorization, isSeeker, clearRedis, addExperience)
+router.patch('/edit', authorization, isSeeker, clearRedis, editExperience)
+router.delete('/delete/', authorization, isSeeker, clearRedis, deleteExperience)
 
 module.exports = router

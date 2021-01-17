@@ -34,8 +34,7 @@ module.exports = {
   getSkill: (id) => {
     return new Promise((resolve, reject) => {
       connection.query(
-        'select id, skill_name from skills_pekerja where id_pekerja = ?',
-        id,
+        `select id, skill_name from skills_pekerja where id_pekerja = ${id}`,
         (err, result) => {
           !err ? resolve(result) : reject(new Error(err))
         }

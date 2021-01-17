@@ -7,10 +7,11 @@ const {
   deletePortofolio
 } = require('../controller/portofolio')
 const { uploadFilter, updateFilter } = require('../middleware/multerPortofolio')
+const { getPortofolioByIdRedis, clearRedis } = require('../middleware/redis')
 
-router.get('/:id', authorization, getPortofolio)
-router.post('/', authorization, isSeeker, uploadFilter, addPortofolio)
-router.patch('/:id', authorization, isSeeker, updateFilter, editPortofolio)
-router.delete('/delete/', authorization, isSeeker, deletePortofolio)
+router.get('/:id', authorization, isSeeker, getPortofolioByIdRedis, getPortofolio)
+router.post('/', authorization, isSeeker, uploadFilter, clearRedis, addPortofolio)
+router.patch('/:id', authorization, isSeeker, updateFilter, clearRedis, editPortofolio)
+router.delete('/delete/', authorization, isSeeker, clearRedis, deletePortofolio)
 
 module.exports = router
