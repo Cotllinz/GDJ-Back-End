@@ -74,5 +74,44 @@ module.exports = {
       console.log(error)
       return helper.response(response, 400, 'Bad Request', error)
     }
+  },
+  getDataBySkillSorting: async (request, response) => {
+    try {
+      let { page, limit } = request.query
+      page = parseInt(page)
+      limit = parseInt(limit)
+      const totalData = await getDataCountModel()
+      console.log(totalData)
+      const totalPage = Math.ceil(totalData / limit)
+      const offset = page * limit - limit
+      const prevLink =
+      page > 1
+        ? qs.stringify({ ...request.query, ...{ page: page - 1 } })
+        : null
+      const nextLink =
+      page < totalPage
+        ? qs.stringify({ ...request.query, ...{ page: page + 1 } })
+        : null
+      const pageInfo = {
+        page,
+        totalPage,
+        limit,
+        totalData,
+        nextLink:
+        nextLink && `http://localhost:${process.env.PORT}/home/getsortingskill/?${nextLink}`,
+        prevLink:
+        prevLink && `http://localhost:${process.env.PORT}/home/getsortingskill/?${prevLink}`
+      }
+      const result = await getDataBySkillSortingModel(limit, offset)
+      return helper.response(
+        response,
+        200,
+        'Success get data pekerja by sorting skill',
+        result, pageInfo
+      )
+    } catch (error) {
+      console.log(error)
+      return helper.response(response, 400, 'Bad Request', error)
+    }
   }
 }
