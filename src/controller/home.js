@@ -7,7 +7,8 @@ const {
   getSkill,
   getDataBySkillSortingModel,
   getDataCountModel,
-  getCountSkillModel
+  getCountSkillModel,
+  getDataLimit
 } = require('../model/home')
 
 module.exports = {
@@ -121,6 +122,55 @@ module.exports = {
     } catch (error) {
       console.log(error)
       return helper.response(response, 400, 'Bad Request', error)
+    }
+  },
+  getDatabyLimit: async (req, res) => {
+    try {
+      let { page, limit, sort, status } = req.query
+      page = parseInt(page)
+      limit = parseInt(limit)
+      let sorting
+      if (sort) {
+        sorting = sort
+      } else {
+        sorting = ''
+      }
+      let statusPekerja
+      if (status) {
+        statusPekerja = status
+      } else {
+        statusPekerja = ''
+      }
+      const totalData = await getDataCountModel(statusPekerja)
+      const totalPage = Math.ceil(totalData / limit)
+      const offset = page * limit - limit
+      const prevLink =
+        page > 1 ? qs.stringify({ ...req.query, ...{ page: page - 1 } }) : null
+      const nextLink =
+        page < totalPage
+          ? qs.stringify({ ...req.query, ...{ page: page + 1 } })
+          : null
+      const newPage = {
+        page,
+        limit,
+        totalPage,
+        totalData,
+        nextLink: nextLink && `http://localhost:3000/home/limit/?${nextLink}`,
+        prevLink: prevLink && `http://localhost:3000/home/limit/?${prevLink}`
+      }
+      const result = await getDataLimit(limit, offset, statusPekerja, sorting)
+      for (let i = 0; i < result.length; i++) {
+        result[i].skills = await getSkill(result[i].id_pekerja)
+      }
+      return helper.response(
+        res,
+        200,
+        'Succes get data pekerja',
+        result,
+        newPage
+      )
+    } catch (err) {
+      return helper.response(res, 400, 'Bad Request', err)
     }
   }
 }

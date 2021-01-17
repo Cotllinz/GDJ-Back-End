@@ -1,11 +1,22 @@
 const connection = require('../config/mysql')
 module.exports = {
-  getDataCountModel: () => {
+  getDataCountModel: (status) => {
     return new Promise((resolve, reject) => {
       connection.query(
-        'SELECT COUNT(*) AS total FROM profile_pekerja',
+        `SELECT COUNT(*) AS total FROM profile_pekerja ${status}`,
         (error, result) => {
           !error ? resolve(result[0].total) : reject(new Error(error))
+        }
+      )
+    })
+  },
+  getDataLimit: (limit, offset, status, sorting) => {
+    console.log(status)
+    return new Promise((resolve, reject) => {
+      connection.query(
+        `SELECT profile_pekerja.id_pekerja, fullname_pekerja,job_require, job_desk, city_pekerja FROM profile_pekerja ${status} ${sorting} LIMIT ${limit} OFFSET ${offset}`,
+        (error, result) => {
+          !error ? resolve(result) : reject(new Error(error))
         }
       )
     })
