@@ -20,7 +20,7 @@ module.exports = {
       return helper.response(response, 403, 'Please Login First!')
     }
   },
-  isReqruiter: (request, response, next) => {
+  isRecruiter: (request, response, next) => {
     if (request.token.roles === 1 && request.token.status_user === 'ON') {
       next()
     } else {

@@ -1,12 +1,19 @@
 const router = require('express').Router()
+const { authorization, isRecruiter } = require('../middleware/auth')
 const {
   getCompanyProfileById,
   patchCompanyProfile
 } = require('../controller/companyProfile')
 const uploadImage = require('../middleware/multer')
 
-router.get('/:id', getCompanyProfileById)
+router.get('/:id', authorization, isRecruiter, getCompanyProfileById)
 
-router.patch('/:id', uploadImage, patchCompanyProfile)
+router.patch(
+  '/:id',
+  authorization,
+  isRecruiter,
+  uploadImage,
+  patchCompanyProfile
+)
 
 module.exports = router

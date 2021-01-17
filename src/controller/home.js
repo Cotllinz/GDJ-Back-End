@@ -170,6 +170,7 @@ module.exports = {
         newPage
       )
     } catch (err) {
+      console.log(err)
       return helper.response(res, 400, 'Bad Request', err)
     }
   }
