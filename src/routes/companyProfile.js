@@ -13,7 +13,6 @@ const uploadImage = require('../middleware/multer')
 router.get(
   '/:id',
   authorization,
-  isRecruiter,
   getCompanyProfileByIdRedis,
   getCompanyProfileById
 )
