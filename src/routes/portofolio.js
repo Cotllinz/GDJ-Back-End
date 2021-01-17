@@ -8,7 +8,7 @@ const {
 } = require('../controller/portofolio')
 const { uploadFilter, updateFilter } = require('../middleware/multerPortofolio')
 
-router.get('/:id', authorization, isSeeker, getPortofolio)
+router.get('/:id', authorization, getPortofolio)
 router.post('/', authorization, isSeeker, uploadFilter, addPortofolio)
 router.patch('/:id', authorization, isSeeker, updateFilter, editPortofolio)
 router.delete('/delete/', authorization, isSeeker, deletePortofolio)

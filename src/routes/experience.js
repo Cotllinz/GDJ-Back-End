@@ -7,7 +7,7 @@ const {
   deleteExperience
 } = require('../controller/experience')
 
-router.get('/:id', authorization, isSeeker, getExperience)
+router.get('/:id', authorization, getExperience)
 router.post('/', authorization, isSeeker, addExperience)
 router.patch('/edit', authorization, isSeeker, editExperience)
 router.delete('/delete/', authorization, isSeeker, deleteExperience)
