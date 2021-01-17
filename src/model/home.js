@@ -1,5 +1,4 @@
 const connection = require('../config/mysql')
-
 module.exports = {
   getDataCountModel: () => {
     return new Promise((resolve, reject) => {
@@ -42,5 +41,13 @@ module.exports = {
       )
     })
   },
-  getZ
+  getDataBySkillSortingModel: (limit, offset) => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+      `SELECT profile_pekerja.id_pekerja, fullname_pekerja,job_require, job_desk, city_pekerja, status_jobs, COUNT(skills_pekerja.skill_name) AS Skills FROM skills_pekerja LEFT JOIN profile_pekerja ON skills_pekerja.id_pekerja = profile_pekerja.id_pekerja GROUP BY skills_pekerja.id_pekerja ORDER BY Skills DESC LIMIT ${limit} OFFSET ${offset}`, (err, result) => {
+        !err ? resolve(result) : reject(new Error(err))
+      }
+      )
+    })
+  }
 }
