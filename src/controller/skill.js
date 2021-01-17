@@ -63,13 +63,13 @@ module.exports = {
   editSkill: async (request, response) => {
     try {
       const { id } = request.params
-      const { skill_name } = request.body
+      const { skill_name, idSkill } = request.body
       const setData = {
         skill_name
       }
       const checking = await getSkillModel(id)
       if (checking.length > 0) {
-        const result = await editSkillModel(setData, id)
+        const result = await editSkillModel(setData, id, idSkill)
         return helper.response(response, 200, 'Success edit skill', result)
       } else {
         return helper.response(response, 404, `Skill by id : ${id} Not Found`)

@@ -23,7 +23,7 @@ module.exports = {
   getSkillModel: (id) => {
     return new Promise((resolve, reject) => {
       connection.query(
-        'SELECT skills_pekerja.skill_name FROM skills_pekerja WHERE id_pekerja = ?',
+        'SELECT id, skill_name FROM skills_pekerja WHERE id_pekerja = ?',
         id,
         (error, result) => {
           !error ? resolve(result) : reject(new Error(error))
@@ -42,11 +42,11 @@ module.exports = {
       )
     })
   },
-  editSkillModel: (setData, id) => {
+  editSkillModel: (setData, id, idSkill) => {
     return new Promise((resolve, reject) => {
       connection.query(
-        'UPDATE skills_pekerja SET ? WHERE id_pekerja = ?',
-        [setData, id],
+        'UPDATE skills_pekerja SET ? WHERE id_pekerja = ? && id = ?',
+        [setData, id, idSkill],
         (error, result) => {
           if (!error) {
             const newResult = {
