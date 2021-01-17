@@ -36,6 +36,7 @@ module.exports = {
       const { id } = request.params
       const {
         company_name,
+        jabatan,
         city_recruiter,
         desc_recruiter,
         social_media,
@@ -71,6 +72,7 @@ module.exports = {
 
         const setUser = {
           company_name,
+          jabatan,
           phone_number,
           email_user,
           update_at: new Date()
