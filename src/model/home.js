@@ -24,7 +24,7 @@ module.exports = {
   searchSorthModel: (limit, offset, searching, coba, sorting) => {
     return new Promise((resolve, reject) => {
       connection.query(
-        `SELECT profile_pekerja.id_pekerja, fullname_pekerja,job_require, job_desk, city_pekerja, skill_name FROM profile_pekerja JOIN skills_pekerja ON profile_pekerja.id_pekerja = skills_pekerja.id_pekerja WHERE skill_name LIKE '%${searching}%' ${coba} ${sorting} LIMIT ${limit} OFFSET ${offset}`,
+        `SELECT profile_pekerja.id_pekerja, fullname_pekerja,image_pekerja,job_require, job_desk, city_pekerja, skill_name FROM profile_pekerja JOIN skills_pekerja ON profile_pekerja.id_pekerja = skills_pekerja.id_pekerja WHERE skill_name LIKE '%${searching}%' ${coba} ${sorting} LIMIT ${limit} OFFSET ${offset}`,
         (error, result) => {
           !error ? resolve(result) : reject(new Error(error))
         }
