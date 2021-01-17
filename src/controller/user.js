@@ -74,7 +74,7 @@ module.exports = {
               from: `"Get Dream Job "${process.env.email}`,
               to: `${email_user}`,
               subject: `Hello ${email_user}, Recruiter`,
-              html: `<a href="/confirm-email/${result.token_confirmEmail}">Click This Button</a></a>`
+              html: `<a href="http://localhost:8080/confirm-email/${result.token_confirmEmail}">Click This Button</a></a>`
             }
             transporter.sendMail(mailOPtion, (err, result) => {
               if (err) {
@@ -118,7 +118,7 @@ module.exports = {
               from: `"Get Dream Job "${process.env.email}`,
               to: `${email_user}`,
               subject: `Hello ${email_user}, Job Seaker`,
-              html: `<a href="lhttp://localhost:8080/confirm-email/${result.token_confirmEmail}">Click This Button</a></a>`
+              html: `<a href="http://localhost:8080/confirm-email/${result.token_confirmEmail}">Click This Button</a></a>`
             }
             transporter.sendMail(mailOPtion, (err, result) => {
               if (err) {
