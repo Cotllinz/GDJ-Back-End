@@ -6,6 +6,8 @@ const {
 } = require('../model/companyProfile')
 const helper = require('../helper/helper')
 const fs = require('fs')
+const redis = require('redis')
+const client = redis.createClient()
 
 module.exports = {
   getCompanyProfileById: async (request, response) => {
@@ -13,6 +15,11 @@ module.exports = {
       const { id } = request.params
       const result = await getCompanyProfileById(id)
       if (result.length > 0) {
+        client.setex(
+          `GDJcompanyprofilebyid:${id}`,
+          1800,
+          JSON.stringify(result)
+        )
         return helper.response(
           response,
           200,
