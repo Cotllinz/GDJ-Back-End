@@ -5,7 +5,7 @@ const client = redis.createClient()
 module.exports = {
   notifRedis: (request, response, next) => {
     const { id } = request.params
-    client.get(`notifById:${id}`, (error, result) => {
+    client.get(`GDJnotifById:${id}`, (error, result) => {
       if (!error && result != null) {
         return helper.response(
           response,
@@ -18,8 +18,8 @@ module.exports = {
       }
     })
   },
-  clearNotifRedis: (request, response, next) => {
-    client.keys('notifById*', (_error, result) => {
+  clearRedis: (request, response, next) => {
+    client.keys('GDJ*', (_error, result) => {
       if (result.length > 0) {
         result.forEach((value) => {
           client.del(value)

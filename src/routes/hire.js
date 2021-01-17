@@ -3,9 +3,9 @@ const { authorization, isSeeker, isRecruiter } = require('../middleware/auth')
 const uploadFiles = require('../middleware/multerFileHire')
 
 const { hire, notif } = require('../controller/hire')
-// const { notifRedis } = require('../middleware/redis')
+const { notifRedis, clearRedis } = require('../middleware/redis')
 
-router.post('/', authorization, isRecruiter, uploadFiles, hire)
-router.get('/notif/:id', authorization, isSeeker, notif)
+router.post('/', authorization, isRecruiter, clearRedis, uploadFiles, hire)
+router.get('/notif/:id', authorization, isSeeker, notifRedis, notif)
 
 module.exports = router
