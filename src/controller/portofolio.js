@@ -25,7 +25,6 @@ module.exports = {
         application_name,
         repo_link,
         type_portofolio,
-        created_at: new Date(),
         image_portofolio:
           request.file === undefined ? '' : request.file.filename,
         create_at: new Date()
@@ -48,34 +47,40 @@ module.exports = {
       const photo = await getPhotoPortofolioModel(id)
       console.log(photo)
       console.log(id_pekerja)
+      const checkPortofolioSeeker = await getPortofolioModel(id_pekerja)
+      console.log(checkPortofolioSeeker.length)
       const checkPortofolio = await getPortofolioByIdModel(id)
-      if (checkPortofolio.length > 0) {
-        const setData = {
-          id_pekerja,
-          application_name,
-          repo_link,
-          type_portofolio,
-          updated_at: new Date(),
-          image_portofolio: req.file === undefined ? photo : req.file.filename
+      if (checkPortofolioSeeker.length > 0) {
+        if (checkPortofolio.length > 0) {
+          const setData = {
+            id_pekerja,
+            application_name,
+            repo_link,
+            type_portofolio,
+            update_at: new Date(),
+            image_portofolio: req.file === undefined ? photo : req.file.filename
+          }
+          console.log(setData.image_portofolio)
+          if (setData.image_portofolio !== photo) {
+            fs.unlink(`./upload/imagePorto/${photo}`, function (err) {
+              if (err) console.log(err)
+              console.log('File deleted')
+            })
+          }
+          console.log(id)
+          const edit = await editPortofolioModel(setData, id)
+          console.log(edit)
+          return helper.response(
+            res,
+            200,
+            `Success update portofolio user by id ${id_pekerja}`,
+            edit
+          )
+        } else {
+          return helper.response(res, 404, 'ID Not Found!')
         }
-        console.log(setData.image_portofolio)
-        if (setData.image_portofolio !== photo) {
-          fs.unlink(`./upload/imagePorto/${photo}`, function (err) {
-            if (err) console.log(err)
-            console.log('File deleted')
-          })
-        }
-        console.log(id)
-        const edit = await editPortofolioModel(setData, id)
-        console.log(edit)
-        return helper.response(
-          res,
-          200,
-          `Success update portofolio user by id ${id_pekerja}`,
-          edit
-        )
       } else {
-        return helper.response(res, 404, 'ID Not Found!')
+        return helper.response(res, 404, 'ID Seeker is Not Found!')
       }
     } catch (error) {
       console.log(error)
@@ -107,21 +112,26 @@ module.exports = {
       let { id, idPekerja } = req.query
       id = parseInt(id)
       idPekerja = parseInt(idPekerja)
+      const checkIdSeeker = await getPortofolioModel(idPekerja)
       const checkId = await getPortofolioByIdModel(id)
-      if (checkId.length > 0) {
-        const photo = await getPhotoPortofolioModel(id)
-        fs.unlink(`./upload/imagePorto/${photo}`, function (err) {
-          if (err) console.log(err)
-          console.log('File deleted')
-        })
-        await deletePortofolioModel(id, idPekerja)
-        return helper.response(
-          res,
-          200,
-          `Success delete portofolio user by id ${idPekerja}`
-        )
+      if (checkIdSeeker.length > 0) {
+        if (checkId.length > 0) {
+          const photo = await getPhotoPortofolioModel(id)
+          fs.unlink(`./upload/imagePorto/${photo}`, function (err) {
+            if (err) console.log(err)
+            console.log('File deleted')
+          })
+          await deletePortofolioModel(id, idPekerja)
+          return helper.response(
+            res,
+            200,
+            `Success delete portofolio user by id ${idPekerja}`
+          )
+        } else {
+          return helper.response(res, 404, 'ID Not Found')
+        }
       } else {
-        return helper.response(res, 404, 'ID Not Found')
+        return helper.response(res, 404, 'ID Seeker is Not Found')
       }
     } catch (error) {
       console.log(error)
