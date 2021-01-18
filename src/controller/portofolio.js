@@ -80,11 +80,11 @@ module.exports = {
         console.log(setData.image_portofolio)
         if (setData.image_portofolio !== photo) {
           fs.unlink(`./upload/imagePorto/${photo}`, function (err) {
-            if (err) console.log(err)
-            console.log('File deleted')
+            if (err) {
+              return helper.response(res, 404, 'Invalid Upload Image')
+            }
           })
         }
-        console.log(id)
         const edit = await editPortofolioModel(setData, id)
         console.log(edit)
         return helper.response(
