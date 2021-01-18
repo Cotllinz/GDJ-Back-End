@@ -44,9 +44,9 @@ module.exports = {
   getSearchCountModel: (search, status) => {
     return new Promise((resolve, reject) => {
       connection.query(
-        `SELECT COUNT(*) as total FROM skills_pekerja join profile_pekerja on profile_pekerja.id_pekerja = skills_pekerja.id_pekerja WHERE skill_name LIKE "%${search}%" ${status}`,
+        `SELECT COUNT(*) as total FROM skills_pekerja join profile_pekerja on profile_pekerja.id_pekerja = skills_pekerja.id_pekerja WHERE skill_name LIKE "%${search}%" ${status} group by skills_pekerja.id_pekerja`,
         (err, result) => {
-          !err ? resolve(result[0].total) : reject(new Error(err))
+          !err ? resolve(result) : reject(new Error(err))
         }
       )
     })

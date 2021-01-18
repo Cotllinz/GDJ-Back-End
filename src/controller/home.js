@@ -16,7 +16,7 @@ const client = redis.createClient()
 module.exports = {
   searchSort: async (request, response) => {
     try {
-      let { page, limit, search, sort, coba } = request.query
+      let { page, limit, search, sort, status } = request.query
       page = parseInt(page)
       limit = parseInt(limit)
       let searching
@@ -31,14 +31,14 @@ module.exports = {
       } else {
         sorting = ''
       }
-      let cobas
-      if (coba) {
-        cobas = coba
+      let StatusNeedit
+      if (status) {
+        StatusNeedit = status
       } else {
-        cobas = ''
+        StatusNeedit = ''
       }
-      console.log(cobas)
-      const totalData = await getSearchCountModel(searching, cobas)
+      const totalData1 = await getSearchCountModel(searching, StatusNeedit)
+      const totalData = totalData1.length
       const totalPage = Math.ceil(totalData / limit)
       const offset = page * limit - limit
       const prevLink =
@@ -61,7 +61,7 @@ module.exports = {
         limit,
         offset,
         searching,
-        cobas,
+        StatusNeedit,
         sorting
       )
       for (let i = 0; i < result.length; i++) {
