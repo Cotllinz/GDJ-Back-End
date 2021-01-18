@@ -37,7 +37,7 @@ module.exports = {
           return helper.response(
             response,
             400,
-            'Make sure your id data input is correct'
+            'Make sure your id data input correct'
           )
         }
       } else {
