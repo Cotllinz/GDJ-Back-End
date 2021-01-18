@@ -48,6 +48,10 @@ module.exports = {
         )
       }
     } catch (error) {
+      fs.unlink(`./upload/imagePorto/${request.file.filename}`, function (err) {
+        if (err) console.log(err)
+        console.log('File deleted')
+      })
       return helper.response(response, 400, 'Bad Request', error)
     }
   },
@@ -97,6 +101,10 @@ module.exports = {
         return helper.response(res, 404, 'ID Not Found!')
       }
     } catch (error) {
+      fs.unlink(`./upload/imagePorto/${req.file.filename}`, function (err) {
+        if (err) console.log(err)
+        console.log('File deleted')
+      })
       console.log(error)
       return helper.response(res, 400, 'Bad Request', error)
     }
