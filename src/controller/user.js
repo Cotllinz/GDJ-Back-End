@@ -76,7 +76,7 @@ module.exports = {
               from: `"Get Dream Job "${process.env.email}`,
               to: `${email_user}`,
               subject: `Hello ${email_user}, Recruiter`,
-              html: `<a href="http://localhost:8080/confirm-email/${result.token_confirmEmail}">Click This Button</a></a>`
+              html: `<a href="http://localhost:8080/confirm-email/${result.token_confirmEmail}">Click This Button</a>`
             }
             transporter.sendMail(mailOPtion, (err, result) => {
               if (err) {
@@ -141,7 +141,6 @@ module.exports = {
         }
       }
     } catch (error) {
-      console.log(error)
       return helper.response(res, 400, 'Bad Request', error)
     }
   },
@@ -208,7 +207,7 @@ module.exports = {
           from: `"Get Dream Job "${process.env.email}`,
           to: `${email}`,
           subject: `Hello ${email}`,
-          html: `<a href="http://localhost:8080/forgot/${result.token_forgotPassword}">Click This link to update your password</a></a>`
+          html: `<a href="http://localhost:8080/forgot/${result.token_forgotPassword}">Click This link to update your password</a>`
         }
         transporter.sendMail(mailOPtion, (err, result) => {
           if (err) {

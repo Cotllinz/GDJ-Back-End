@@ -13,7 +13,6 @@ module.exports = {
   addSkill: async (request, response) => {
     try {
       const skill = request.body
-      console.log(skill)
       let result
       for (let i = 0; i < skill.length; i++) {
         const { skill_name, id_pekerja } = skill[i]
@@ -22,13 +21,10 @@ module.exports = {
           id_pekerja,
           create_at: new Date()
         }
-        console.log(setData)
         result = await addSkillModel(setData)
-        console.log(result)
       }
       return helper.response(response, 200, 'Success add your skill', result)
     } catch (error) {
-      console.log(error)
       return helper.response(response, 400, 'Bad Request', error)
     }
   },

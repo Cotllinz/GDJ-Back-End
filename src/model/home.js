@@ -11,7 +11,6 @@ module.exports = {
     })
   },
   getDataLimit: (limit, offset, status, sorting) => {
-    console.log(status)
     return new Promise((resolve, reject) => {
       connection.query(
         `SELECT profile_pekerja.id_pekerja, fullname_pekerja,job_require,image_pekerja, job_desk, city_pekerja FROM profile_pekerja ${status} ${sorting} LIMIT ${limit} OFFSET ${offset}`,

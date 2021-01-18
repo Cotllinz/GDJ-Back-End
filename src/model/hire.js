@@ -31,5 +31,33 @@ module.exports = {
         }
       )
     })
+  },
+  getPekerjaById: (id) => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        `SELECT * FROM profile_pekerja WHERE id_pekerja=${id}`,
+        (error, result) => {
+          if (!error) {
+            resolve(result)
+          } else {
+            reject(error)
+          }
+        }
+      )
+    })
+  },
+  getRecruiterById: (id) => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        `SELECT * FROM profile_recruiter WHERE id_recruiter=${id}`,
+        (error, result) => {
+          if (!error) {
+            resolve(result)
+          } else {
+            reject(error)
+          }
+        }
+      )
+    })
   }
 }
