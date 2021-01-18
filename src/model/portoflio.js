@@ -5,7 +5,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       connection.query(
         `UPDATE portofolio SET ? WHERE id = ${id}`,
-        (setData),
+        setData,
         (error, result) => {
           if (!error) {
             const newResult = {
@@ -65,24 +65,31 @@ module.exports = {
   },
   getPortofolioByIdModel: (id) => {
     return new Promise((resolve, reject) => {
-      connection.query('SELECT * FROM portofolio WHERE id=?', id, (error, result) => {
-        if (!error) {
-          resolve(result)
-        } else {
-          reject(error)
+      connection.query(
+        'SELECT * FROM portofolio WHERE id=?',
+        id,
+        (error, result) => {
+          if (!error) {
+            resolve(result)
+          } else {
+            reject(error)
+          }
         }
-      })
+      )
     })
   },
   getPortofolioModel: (id) => {
     return new Promise((resolve, reject) => {
-      connection.query(`SELECT * FROM portofolio WHERE id_pekerja=${id}`, (error, result) => {
-        if (!error) {
-          resolve(result)
-        } else {
-          reject(error)
+      connection.query(
+        `SELECT * FROM profile_pekerja WHERE id_pekerja=${id}`,
+        (error, result) => {
+          if (!error) {
+            resolve(result)
+          } else {
+            reject(error)
+          }
         }
-      })
+      )
     })
   }
 }

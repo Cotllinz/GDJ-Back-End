@@ -10,11 +10,13 @@ const {
   getCountSkillModel,
   getDataLimit
 } = require('../model/home')
+const redis = require('redis')
+const client = redis.createClient()
 
 module.exports = {
   searchSort: async (request, response) => {
     try {
-      let { page, limit, search, sort, coba } = request.query
+      let { page, limit, search, sort, status } = request.query
       page = parseInt(page)
       limit = parseInt(limit)
       let searching
@@ -29,14 +31,14 @@ module.exports = {
       } else {
         sorting = ''
       }
-      let cobas
-      if (coba) {
-        cobas = coba
+      let StatusNeedit
+      if (status) {
+        StatusNeedit = status
       } else {
-        cobas = ''
+        StatusNeedit = ''
       }
-      console.log(cobas)
-      const totalData = await getSearchCountModel(searching, cobas)
+      const totalData1 = await getSearchCountModel(searching, StatusNeedit)
+      const totalData = totalData1.length
       const totalPage = Math.ceil(totalData / limit)
       const offset = page * limit - limit
       const prevLink =
@@ -59,12 +61,21 @@ module.exports = {
         limit,
         offset,
         searching,
-        cobas,
+        StatusNeedit,
         sorting
       )
       for (let i = 0; i < result.length; i++) {
         result[i].skills = await getSkill(result[i].id_pekerja)
       }
+      const newData = {
+        result,
+        newPage
+      }
+      client.setex(
+        `GDJsearchsort:${JSON.stringify(request.query)}`,
+        1800,
+        JSON.stringify(newData)
+      )
       return helper.response(
         response,
         200,
@@ -73,7 +84,6 @@ module.exports = {
         newPage
       )
     } catch (error) {
-      console.log(error)
       return helper.response(response, 400, 'Bad Request', error)
     }
   },
@@ -112,6 +122,15 @@ module.exports = {
       for (let i = 0; i < result.length; i++) {
         result[i].skills = await getSkill(result[i].id_pekerja)
       }
+      const newData = {
+        result,
+        pageInfo
+      }
+      client.setex(
+        `GDJdatabyskillsorting:${JSON.stringify(request.query)}`,
+        1800,
+        JSON.stringify(newData)
+      )
       return helper.response(
         response,
         200,
@@ -120,7 +139,6 @@ module.exports = {
         pageInfo
       )
     } catch (error) {
-      console.log(error)
       return helper.response(response, 400, 'Bad Request', error)
     }
   },
@@ -162,6 +180,15 @@ module.exports = {
       for (let i = 0; i < result.length; i++) {
         result[i].skills = await getSkill(result[i].id_pekerja)
       }
+      const newData = {
+        result,
+        newPage
+      }
+      client.setex(
+        `GDJdatabylimit:${JSON.stringify(req.query)}`,
+        1800,
+        JSON.stringify(newData)
+      )
       return helper.response(
         res,
         200,
@@ -170,7 +197,6 @@ module.exports = {
         newPage
       )
     } catch (err) {
-      console.log(err)
       return helper.response(res, 400, 'Bad Request', err)
     }
   }

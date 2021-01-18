@@ -6,6 +6,8 @@ const {
 } = require('../model/companyProfile')
 const helper = require('../helper/helper')
 const fs = require('fs')
+const redis = require('redis')
+const client = redis.createClient()
 
 module.exports = {
   getCompanyProfileById: async (request, response) => {
@@ -13,6 +15,11 @@ module.exports = {
       const { id } = request.params
       const result = await getCompanyProfileById(id)
       if (result.length > 0) {
+        client.setex(
+          `GDJcompanyprofilebyid:${id}`,
+          1800,
+          JSON.stringify(result)
+        )
         return helper.response(
           response,
           200,
@@ -36,6 +43,7 @@ module.exports = {
       const { id } = request.params
       const {
         company_name,
+        jabatan,
         city_recruiter,
         desc_recruiter,
         social_media,
@@ -71,6 +79,7 @@ module.exports = {
 
         const setUser = {
           company_name,
+          jabatan,
           phone_number,
           email_user,
           update_at: new Date()
@@ -96,6 +105,14 @@ module.exports = {
           lastResult
         )
       } else {
+        fs.unlink(
+          `./upload/userRecruiter/${request.file.filename}`,
+          function (err) {
+            if (err) {
+              return helper.response(response, 404, 'Invalid Upload Image')
+            }
+          }
+        )
         return helper.response(response, 404, `Profile By Id: ${id} Not Found`)
       }
     } catch (error) {

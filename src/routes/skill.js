@@ -1,6 +1,6 @@
 const router = require('express').Router()
 const { authorization, isSeeker } = require('../middleware/auth')
-
+const { getSkillByIdRedis, clearRedis } = require('../middleware/redis')
 const {
   addSkill,
   getSkill,
@@ -8,9 +8,9 @@ const {
   editSkill
 } = require('../controller/skill')
 
-router.post('/add', authorization, isSeeker, addSkill)
-router.get('/:id', authorization, isSeeker, getSkill)
-router.delete('/:id', authorization, isSeeker, deleteSkill)
-router.patch('/:id', authorization, isSeeker, editSkill)
+router.post('/add', authorization, isSeeker, clearRedis, addSkill)
+router.get('/:id', authorization, getSkillByIdRedis, clearRedis, getSkill)
+router.delete('/', authorization, isSeeker, clearRedis, deleteSkill)
+router.patch('/:id', authorization, isSeeker, clearRedis, editSkill)
 
 module.exports = router

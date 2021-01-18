@@ -11,9 +11,23 @@ const storage = multer.diskStorage({
   }
 })
 
-const maxSize = 5 * 1024 * 1024
+const fileFilter = (request, file, cb) => {
+  if (
+    file.mimetype === 'image/jpeg' ||
+    file.mimetype === 'image/png' ||
+    file.mimetype === 'image/webp' ||
+    file.mimetype === 'application/octet-stream'
+  ) {
+    cb(null, true)
+  } else {
+    cb(new Error('Extension file must be PNG , JPEG or webp'), false)
+  }
+}
+
+const maxSize = 2 * 1024 * 1024
 const upload = multer({
   storage,
+  fileFilter,
   limits: { fileSize: maxSize }
 }).single('files')
 

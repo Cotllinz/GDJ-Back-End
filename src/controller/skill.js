@@ -3,14 +3,16 @@ const {
   addSkillModel,
   getSkillModel,
   deleteSkillModel,
-  editSkillModel
+  editSkillModel,
+  getIdSkillModel
 } = require('../model/skill')
+const redis = require('redis')
+const client = redis.createClient()
 
 module.exports = {
   addSkill: async (request, response) => {
     try {
       const skill = request.body
-      console.log(skill)
       let result
       for (let i = 0; i < skill.length; i++) {
         const { skill_name, id_pekerja } = skill[i]
@@ -19,13 +21,10 @@ module.exports = {
           id_pekerja,
           create_at: new Date()
         }
-        console.log(setData)
         result = await addSkillModel(setData)
-        console.log(result)
       }
       return helper.response(response, 200, 'Success add your skill', result)
     } catch (error) {
-      console.log(error)
       return helper.response(response, 400, 'Bad Request', error)
     }
   },
@@ -34,6 +33,7 @@ module.exports = {
       const { id } = request.params
       const result = await getSkillModel(id)
       if (result.length > 0) {
+        client.setex(`GDJskill:${id}`, 1800, JSON.stringify(result))
         return helper.response(response, 200, 'Success Get Skill By Id', result)
       } else {
         return helper.response(
@@ -48,8 +48,8 @@ module.exports = {
   },
   deleteSkill: async (request, response) => {
     try {
-      const { id } = request.params
-      const { idSkill } = request.body
+      const { id, idSkill } = request.query
+      // const { idSkill } = request.body
       const result = await deleteSkillModel(id, idSkill)
       if (result.length == null) {
         return helper.response(response, 200, 'Success delete skill')
@@ -68,11 +68,16 @@ module.exports = {
         skill_name
       }
       const checking = await getSkillModel(id)
-      if (checking.length > 0) {
+      const checkingIDSkill = await getIdSkillModel(idSkill)
+      if (checking.length > 0 && checkingIDSkill.length > 0) {
         const result = await editSkillModel(setData, id, idSkill)
         return helper.response(response, 200, 'Success edit skill', result)
       } else {
-        return helper.response(response, 404, `Skill by id : ${id} Not Found`)
+        return helper.response(
+          response,
+          404,
+          `Skill id ${idSkill} by id_pekerja : ${id} Not Found`
+        )
       }
     } catch (error) {
       return helper.response(response, 400, 'Bad Request', error)
