@@ -84,7 +84,6 @@ module.exports = {
         newPage
       )
     } catch (error) {
-      console.log(error)
       return helper.response(response, 400, 'Bad Request', error)
     }
   },
@@ -140,7 +139,6 @@ module.exports = {
         pageInfo
       )
     } catch (error) {
-      console.log(error)
       return helper.response(response, 400, 'Bad Request', error)
     }
   },
@@ -199,7 +197,6 @@ module.exports = {
         newPage
       )
     } catch (err) {
-      console.log(err)
       return helper.response(res, 400, 'Bad Request', err)
     }
   }

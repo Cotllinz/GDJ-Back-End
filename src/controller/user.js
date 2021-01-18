@@ -141,7 +141,6 @@ module.exports = {
         }
       }
     } catch (error) {
-      console.log(error)
       return helper.response(res, 400, 'Bad Request', error)
     }
   },

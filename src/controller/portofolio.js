@@ -37,8 +37,9 @@ module.exports = {
         fs.unlink(
           `./upload/imagePorto/${request.file.filename}`,
           function (err) {
-            if (err) console.log(err)
-            console.log('File deleted')
+            if (err) {
+              return helper.response(response, 404, 'Invalid Upload Image')
+            }
           }
         )
         return helper.response(
@@ -49,8 +50,9 @@ module.exports = {
       }
     } catch (error) {
       fs.unlink(`./upload/imagePorto/${request.file.filename}`, function (err) {
-        if (err) console.log(err)
-        console.log('File deleted')
+        if (err) {
+          return helper.response(response, 404, 'Invalid Upload Image')
+        }
       })
       return helper.response(response, 400, 'Bad Request', error)
     }
@@ -65,10 +67,7 @@ module.exports = {
         type_portofolio
       } = req.body
       const photo = await getPhotoPortofolioModel(id)
-      console.log(photo)
-      console.log(id_pekerja)
       const checkPortofolioSeeker = await getPortofolioModel(id_pekerja)
-      console.log(checkPortofolioSeeker.length)
       const checkPortofolio = await getPortofolioByIdModel(id)
       if (checkPortofolioSeeker.length > 0) {
         if (checkPortofolio.length > 0) {
@@ -80,16 +79,14 @@ module.exports = {
             update_at: new Date(),
             image_portofolio: req.file === undefined ? photo : req.file.filename
           }
-          console.log(setData.image_portofolio)
           if (setData.image_portofolio !== photo) {
             fs.unlink(`./upload/imagePorto/${photo}`, function (err) {
-              if (err) console.log(err)
-              console.log('File deleted')
+              if (err) {
+                return helper.response(res, 404, 'Invalid Upload Image')
+              }
             })
           }
-          console.log(id)
           const edit = await editPortofolioModel(setData, id)
-          console.log(edit)
           return helper.response(
             res,
             200,
@@ -104,10 +101,10 @@ module.exports = {
       }
     } catch (error) {
       fs.unlink(`./upload/imagePorto/${req.file.filename}`, function (err) {
-        if (err) console.log(err)
-        console.log('File deleted')
+        if (err) {
+          return helper.response(res, 404, 'Invalid Upload Image')
+        }
       })
-      console.log(error)
       return helper.response(res, 400, 'Bad Request', error)
     }
   },
@@ -127,7 +124,6 @@ module.exports = {
         return helper.response(res, 404, 'ID Not Found')
       }
     } catch (error) {
-      console.log(error)
       return helper.response(res, 400, 'Bad Request', error)
     }
   },
@@ -142,8 +138,9 @@ module.exports = {
         if (checkId.length > 0) {
           const photo = await getPhotoPortofolioModel(id)
           fs.unlink(`./upload/imagePorto/${photo}`, function (err) {
-            if (err) console.log(err)
-            console.log('File deleted')
+            if (err) {
+              return helper.response(res, 404, 'Invalid Upload Image')
+            }
           })
           await deletePortofolioModel(id, idPekerja)
           return helper.response(
@@ -158,7 +155,6 @@ module.exports = {
         return helper.response(res, 404, 'ID Seeker is Not Found')
       }
     } catch (error) {
-      console.log(error)
       return helper.response(res, 400, 'Bad Request', error)
     }
   }
