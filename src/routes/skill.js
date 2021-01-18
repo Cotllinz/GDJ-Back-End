@@ -10,7 +10,7 @@ const {
 
 router.post('/add', authorization, isSeeker, clearRedis, addSkill)
 router.get('/:id', authorization, getSkillByIdRedis, clearRedis, getSkill)
-router.delete('/:id', clearRedis, deleteSkill)
+router.delete('/:id', authorization, isSeeker, clearRedis, deleteSkill)
 router.patch('/:id', authorization, isSeeker, clearRedis, editSkill)
 
 module.exports = router
