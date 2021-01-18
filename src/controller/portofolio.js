@@ -25,13 +25,28 @@ module.exports = {
         application_name,
         repo_link,
         type_portofolio,
-        created_at: new Date(),
         image_portofolio:
           request.file === undefined ? '' : request.file.filename,
         create_at: new Date()
       }
-      const result = await addPortofolioModel(setPorto)
-      return helper.response(response, 200, 'Success Add Portofolio', result)
+      const checking = await getPortofolioModel(id_pekerja)
+      if (checking.length > 0) {
+        const result = await addPortofolioModel(setPorto)
+        return helper.response(response, 200, 'Success Add Portofolio', result)
+      } else {
+        fs.unlink(
+          `./upload/imagePorto/${request.file.filename}`,
+          function (err) {
+            if (err) console.log(err)
+            console.log('File deleted')
+          }
+        )
+        return helper.response(
+          response,
+          404,
+          `Pekerja with id ${id_pekerja} not found`
+        )
+      }
     } catch (error) {
       return helper.response(response, 400, 'Bad Request', error)
     }
@@ -75,6 +90,10 @@ module.exports = {
           edit
         )
       } else {
+        fs.unlink(`./upload/imagePorto/${photo}`, function (err) {
+          if (err) console.log(err)
+          console.log('File deleted')
+        })
         return helper.response(res, 404, 'ID Not Found!')
       }
     } catch (error) {
