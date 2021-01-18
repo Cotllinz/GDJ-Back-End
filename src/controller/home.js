@@ -39,7 +39,6 @@ module.exports = {
       }
       const totalData1 = await getSearchCountModel(searching, StatusNeedit)
       const totalData = totalData1.length
-      console.log(totalData)
       const totalPage = Math.ceil(totalData / limit)
       const offset = page * limit - limit
       const prevLink =

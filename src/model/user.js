@@ -145,13 +145,16 @@ module.exports = {
   },
   getProfilePekerjaModel: (id) => {
     return new Promise((resolve, reject) => {
-      connection.query(`SELECT * FROM profile_pekerja WHERE id_pekerja=${id}`, (error, result) => {
-        if (!error) {
-          resolve(result)
-        } else {
-          reject(error)
+      connection.query(
+        `SELECT * FROM profile_pekerja join user_account on id_user = id_pekerja WHERE id_pekerja=${id}`,
+        (error, result) => {
+          if (!error) {
+            resolve(result)
+          } else {
+            reject(error)
+          }
         }
-      })
+      )
     })
   },
   editProfilePekerjaModel: (setData, id) => {
