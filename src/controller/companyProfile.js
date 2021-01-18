@@ -105,6 +105,14 @@ module.exports = {
           lastResult
         )
       } else {
+        fs.unlink(
+          `./upload/userRecruiter/${request.file.filename}`,
+          function (err) {
+            if (err) {
+              return helper.response(response, 404, 'Invalid Upload Image')
+            }
+          }
+        )
         return helper.response(response, 404, `Profile By Id: ${id} Not Found`)
       }
     } catch (error) {

@@ -25,10 +25,11 @@ const fileFilter = (request, file, cb) => {
     cb(new Error('Extension file must be PNG , JPEG or webp'), false)
   }
 }
+const maxSize = 2 * 1024 * 1024
 const upload = multer({
   storage,
   fileFilter,
-  limits: { fieldSize: 200000 }
+  limits: { fieldSize: maxSize }
 }).single('image_recruiter')
 
 const uploadFilter = (request, response, next) => {

@@ -29,9 +29,29 @@ module.exports = {
           request.file === undefined ? '' : request.file.filename,
         create_at: new Date()
       }
-      const result = await addPortofolioModel(setPorto)
-      return helper.response(response, 200, 'Success Add Portofolio', result)
+      const checking = await getPortofolioModel(id_pekerja)
+      if (checking.length > 0) {
+        const result = await addPortofolioModel(setPorto)
+        return helper.response(response, 200, 'Success Add Portofolio', result)
+      } else {
+        fs.unlink(
+          `./upload/imagePorto/${request.file.filename}`,
+          function (err) {
+            if (err) console.log(err)
+            console.log('File deleted')
+          }
+        )
+        return helper.response(
+          response,
+          404,
+          `Pekerja with id ${id_pekerja} not found`
+        )
+      }
     } catch (error) {
+      fs.unlink(`./upload/imagePorto/${request.file.filename}`, function (err) {
+        if (err) console.log(err)
+        console.log('File deleted')
+      })
       return helper.response(response, 400, 'Bad Request', error)
     }
   },
@@ -83,6 +103,10 @@ module.exports = {
         return helper.response(res, 404, 'ID Seeker is Not Found!')
       }
     } catch (error) {
+      fs.unlink(`./upload/imagePorto/${req.file.filename}`, function (err) {
+        if (err) console.log(err)
+        console.log('File deleted')
+      })
       console.log(error)
       return helper.response(res, 400, 'Bad Request', error)
     }
