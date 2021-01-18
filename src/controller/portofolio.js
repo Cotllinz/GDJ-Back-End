@@ -48,6 +48,7 @@ module.exports = {
         )
       }
     } catch (error) {
+      console.log(error)
       return helper.response(response, 400, 'Bad Request', error)
     }
   },
@@ -70,7 +71,7 @@ module.exports = {
           application_name,
           repo_link,
           type_portofolio,
-          updated_at: new Date(),
+          update_at: new Date(),
           image_portofolio: req.file === undefined ? photo : req.file.filename
         }
         console.log(setData.image_portofolio)
