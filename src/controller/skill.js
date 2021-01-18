@@ -77,7 +77,11 @@ module.exports = {
         const result = await editSkillModel(setData, id, idSkill)
         return helper.response(response, 200, 'Success edit skill', result)
       } else {
-        return helper.response(response, 404, `Skill by id : ${id} Not Found`)
+        return helper.response(
+          response,
+          404,
+          `Skill id ${idSkill} by id_pekerja : ${id} Not Found`
+        )
       }
     } catch (error) {
       return helper.response(response, 400, 'Bad Request', error)
