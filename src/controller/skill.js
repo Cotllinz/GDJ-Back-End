@@ -3,7 +3,8 @@ const {
   addSkillModel,
   getSkillModel,
   deleteSkillModel,
-  editSkillModel
+  editSkillModel,
+  getIdSkillModel
 } = require('../model/skill')
 const redis = require('redis')
 const client = redis.createClient()
@@ -71,7 +72,8 @@ module.exports = {
         skill_name
       }
       const checking = await getSkillModel(id)
-      if (checking.length > 0) {
+      const checkingIDSkill = await getIdSkillModel(idSkill)
+      if (checking.length > 0 && checkingIDSkill.length > 0) {
         const result = await editSkillModel(setData, id, idSkill)
         return helper.response(response, 200, 'Success edit skill', result)
       } else {

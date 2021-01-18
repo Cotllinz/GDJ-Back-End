@@ -60,5 +60,16 @@ module.exports = {
         }
       )
     })
+  },
+  getIdSkillModel: (idSkill) => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        'SELECT id, skill_name FROM skills_pekerja WHERE id = ?',
+        idSkill,
+        (error, result) => {
+          !error ? resolve(result) : reject(new Error(error))
+        }
+      )
+    })
   }
 }
