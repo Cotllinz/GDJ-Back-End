@@ -3,7 +3,8 @@ const {
   editExperienceModel,
   getExperienceModel,
   getExperienceByIdModel,
-  deleteExperienceModel
+  deleteExperienceModel,
+  deleteAllModel
 } = require('../model/experience')
 const helper = require('../helper/helper')
 const redis = require('redis')
@@ -109,6 +110,20 @@ module.exports = {
         return helper.response(res, 404, 'ID Not Found')
       }
     } catch (error) {
+      return helper.response(res, 400, 'Bad Request', error)
+    }
+  },
+  deleteAllExperience: async (req, res) => {
+    try {
+      const { id } = req.query
+      const result = await deleteAllModel(id)
+      if (result.length == null) {
+        return helper.response(res, 200, 'Success delete all experience by id')
+      } else {
+        return helper.response(res, 404, `Experience Id : ${id} Not Found`)
+      }
+    } catch (error) {
+      console.log(error)
       return helper.response(res, 400, 'Bad Request', error)
     }
   }
