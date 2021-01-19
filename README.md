@@ -1,6 +1,17 @@
-<h1 align="center">#GetDreamJob RESTfull API</h1>
+<h1 align='center'>Express JS - Get Dream Job</h1>
+  <p align="center">
+    <a href="https://documenter.getpostman.com/view/12329591/TVzXCFgq">View Postman</a>
+    ·
+    <a href="https://github.com/Cotllinz/GDJ-Back-End/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/Cotllinz/GDJ-Back-End/pulls">Request Feature</a>
+  </p>
 
-This project was built as a form of response to technological developments, especially in the field of marketing. cafe is very much in demand by various groups at the moment, that's why I built this project. [More about Express](https://en.wikipedia.org/wiki/Express.js)
+![Image Banner](https://raw.githubusercontent.com/Cotllinz/GDJ-Back-End/main/postman-image.jpg)
+
+## About The Project
+
+GDJ (Get Dream Job) is a website that connects workers with recruiters, in order to make it easier for recruiters to find, sort, and get the best talents with the skills their companies need.
 
 ## Built With
 
@@ -23,22 +34,22 @@ This project was built as a form of response to technological developments, espe
 5. Create a database with the name #nama_database, and Import file sql to **phpmyadmin**
 6. Open Postman desktop application or Chrome web app extension that has installed before
 7. Choose HTTP Method and enter request url.(ex. localhost:3000/)
-8. You can see all the end point [here](https://documenter.getpostman.com/view/13449265/TVsoGVpk)
+8. You can see all the end point [here](https://documenter.getpostman.com/view/12329591/TVzXCFgq)
 
 ## Set up .env file
 
 Open .env file on your favorite code editor, and copy paste this code below :
 
 ```
-PORT=3000
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=''
-DB_NAME=gdj_database
-DB_TIMEZONE=UTC
+DB_HOST=localhost //Database Host
+DB_USER=root //Database User
+DB_PASSWORD='' //Database Password
+DB_NAME=gdj_database //Database Name
+DB_TIMEZONE=UTC //Database Timezone
+PORT=3000 //Port where express is running
 ```
 
-## License
+## License Team
 
 © [Andrawan Erlang Pradana](https://github.com/andrawanerlang1)
 © [Rudy Galih](https://github.com/Cotllinz)
@@ -47,4 +58,13 @@ DB_TIMEZONE=UTC
 © [Firman Azhar Riyadi](https://github.com/FirmanAzharR)
 © [Chandra Oktaviani](https://github.com/chnd-ktvn)
 
- 
+## GDJ - TEAM GET DREAM JOB
+
+> All Members of Default Team
+
+|                                                <a href="#" target="_blank">**Full-Stack Developer & Team Leader**</a>                                                |                                                          <a href="#" target="_blank">**Front-End Developer**</a>                                                           |                                                         <a href="#" target="_blank">**Front-End Developer**</a>                                                         |                                                         <a href="#" target="_blank">**Back-End Developer**</a>                                                         |                                                       <a href="#" target="_blank">**Back-End Developer**</a>                                                        |                                                      <a href="#" target="_blank">**Back-End Developer**</a>                                                       |
+| :------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+| [![Full-Stack Developer Image](https://avatars0.githubusercontent.com/u/63383858?s=400&u=9aee5c57b712b3e5e4828e6aee4fef6aa0861fc7&v=4)](https://github.com/Cotllinz) | [![Front-End Developer Image](https://avatars0.githubusercontent.com/u/73692809?s=400&u=82876fb8bf32bfc66ffc2141c62fcf15fda29231&v=4)](https://github.com/andrawanerlang1) | [![Front-End Developer Image](https://avatars0.githubusercontent.com/u/33318547?s=400&u=96efccf89a3ed9d6dec9595bae2ce9ddca6dda67&v=4)](https://github.com/FirmanAzharR) | [![Back-End Developer Image](https://avatars1.githubusercontent.com/u/74347780?s=400&u=1fab93361afb9a587fcf8f2ce0e685c61c101f13&v=4)](https://github.com/IlhamHafsyah) | [![Back-End Developer Image](https://avatars0.githubusercontent.com/u/53890286?s=400&u=b2dec22b6b24814b226f74b7fd882584834cb538&v=4)](https://github.com/chnd-ktvn) | [![Back-End Developer Image](https://avatars1.githubusercontent.com/u/67422750?s=400&u=21d465c9ea07dcf6421ffc6076ca02f863843dc4&v=4)](https://github.com/hasbiak) |
+|                                       <a href="https://github.com/Cotllinz" target="_blank">`https://github.com/Cotllinz`</a>                                        |                                   <a href="https://github.com/andrawanerlang1" target="_blank">`https://github.com/andrawanerlang1`</a>                                    |                                     <a href="https://github.com/FirmanAzharR" target="_blank">`https://github.com/FirmanAzharR`</a>                                     |                                    <a href="https://github.com/IlhamHafsyah" target="_blank">`https://github.com/IlhamHafsyah`</a>                                     |                                      <a href="https://github.com/chnd-ktvn" target="_blank">`https://github.com/chnd-ktvn`</a>                                      |                                       <a href="https://github.com/hasbiak" target="_blank">`https://github.com/hasbiak`</a>                                       |
+
+---
