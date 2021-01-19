@@ -1,6 +1,17 @@
-<h1 align="center">ExpressJS | GET DREAM JOB</h1>
+<h1 align='center'>Express JS - Get Dream Job</h1>
+  <p align="center">
+    <a href="https://documenter.getpostman.com/view/12329591/TVzXCFgq">View Postman</a>
+    ·
+    <a href="https://github.com/Cotllinz/GDJ-Back-End/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/Cotllinz/GDJ-Back-End/pulls">Request Feature</a>
+  </p>
 
-GDJ (Get Dream Job) is a website that connects workers with recruiters, in order to make it easier for recruiters to find, sort, and get the best talents with the skills their companies need. [More about Express](https://en.wikipedia.org/wiki/Express.js)
+![Image Banner](https://raw.githubusercontent.com/Cotllinz/GDJ-Back-End/development/postman-image.jpg)
+
+## About The Project
+
+GDJ (Get Dream Job) is a website that connects workers with recruiters, in order to make it easier for recruiters to find, sort, and get the best talents with the skills their companies need.
 
 ## Built With
 
