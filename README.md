@@ -51,11 +51,11 @@ PORT=3000 //Port where express is running
 
 ## License Team
 
-© [Andrawan Erlang Pradana](https://github.com/andrawanerlang1)
-© [Rudy Galih](https://github.com/Cotllinz)
-© [Hasbi Alwi Kusmana](https://github.com/hasbiak)
-© [Mohammad Ilham Nurdhi Hafsyah](https://github.com/IlhamHafsyah)
-© [Firman Azhar Riyadi](https://github.com/FirmanAzharR)
+© [Andrawan Erlang Pradana](https://github.com/andrawanerlang1)<br>
+© [Rudy Galih](https://github.com/Cotllinz)<br>
+© [Hasbi Alwi Kusmana](https://github.com/hasbiak)<br>
+© [Mohammad Ilham Nurdhi Hafsyah](https://github.com/IlhamHafsyah)<br>
+© [Firman Azhar Riyadi](https://github.com/FirmanAzharR)<br>
 © [Chandra Oktaviani](https://github.com/chnd-ktvn)
 
 ## GDJ - TEAM GET DREAM JOB
