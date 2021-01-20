@@ -1,5 +1,10 @@
 const helper = require('../helper/helper')
-const { hireModel, notifModels } = require('../model/hire')
+const {
+  hireModel,
+  notifModels,
+  getPekerjaById,
+  getRecruiterById
+} = require('../model/hire')
 const redis = require('redis')
 const client = redis.createClient()
 
@@ -16,13 +21,25 @@ module.exports = {
           desc_jobs,
           created_at: new Date()
         }
-        const result = await hireModel(setData)
-        return helper.response(
-          response,
-          200,
-          `Sending offer letter to ${id_pekerja}`,
-          result
-        )
+        const checkingIdPekerja = await getPekerjaById(id_pekerja)
+        const checkingIdRecruiter = await getRecruiterById(id_recruiter)
+        console.log(checkingIdPekerja)
+        console.log(checkingIdRecruiter)
+        if (checkingIdPekerja.length > 0 && checkingIdRecruiter.length > 0) {
+          const result = await hireModel(setData)
+          return helper.response(
+            response,
+            200,
+            `Sending offering letter to ${id_pekerja}`,
+            result
+          )
+        } else {
+          return helper.response(
+            response,
+            400,
+            'Make sure your id data input correct'
+          )
+        }
       } else {
         return helper.response(response, 400, 'All data must be filled in')
       }
