@@ -113,12 +113,17 @@ module.exports = {
       const { id } = req.params
       const result = await getPortofolioModel(id)
       if (result.length > 0) {
-        client.setex(`GDJportofoliobyid:${id}`, 1800, JSON.stringify(result))
+        const resultPorto = await getPortofolioByIdModel(id)
+        client.setex(
+          `GDJportofoliobyid:${id}`,
+          1800,
+          JSON.stringify(resultPorto)
+        )
         return helper.response(
           res,
           200,
           `Success get portofolio user by id ${id}`,
-          result
+          resultPorto
         )
       } else {
         return helper.response(res, 404, 'ID Not Found')

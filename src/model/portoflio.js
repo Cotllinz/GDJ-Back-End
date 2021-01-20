@@ -66,7 +66,7 @@ module.exports = {
   getPortofolioByIdModel: (id) => {
     return new Promise((resolve, reject) => {
       connection.query(
-        'SELECT * FROM portofolio WHERE id=?',
+        'SELECT * FROM portofolio WHERE id_pekerja=?',
         id,
         (error, result) => {
           if (!error) {
