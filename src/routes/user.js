@@ -13,7 +13,8 @@ const {
   updatePasswordonForgetPass,
   login,
   editProfilePekerja,
-  getProfilePekerja
+  getProfilePekerja,
+  changePassword
 } = require('../controller/user')
 
 router.post('/register', register)
@@ -35,5 +36,6 @@ router.patch(
   clearRedis,
   editProfilePekerja
 )
+router.patch('/changepass/:id', changePassword)
 
 module.exports = router

@@ -16,7 +16,8 @@ const {
   getPhotoProfilePekerjaModel,
   updateTokenForgetPass,
   updatePasswordForgot,
-  codeTokenForgotCheckModel
+  codeTokenForgotCheckModel,
+  changePasswordModel
 } = require('../model/user')
 const nodemailer = require('nodemailer')
 require('dotenv').config()
@@ -238,7 +239,8 @@ module.exports = {
         const date = new Date()
         const timeStampDiff = await getTimeStampDiff(date, token)
         console.log(timeStampDiff)
-        if (timeStampDiff <= 180) { // 3 mins
+        if (timeStampDiff <= 180) {
+          // 3 mins
           const salt = bcrypt.genSaltSync(10)
           const encryptPassword = bcrypt.hashSync(password, salt)
           const setData = {
@@ -398,6 +400,22 @@ module.exports = {
         return helper.response(res, 404, 'ID Not Found')
       }
     } catch (error) {
+      return helper.response(res, 400, 'Bad Request', error)
+    }
+  },
+  changePassword: async (req, res) => {
+    try {
+      const { id } = req.params
+      const { newPass } = req.body
+      const salt = bcrypt.genSaltSync(10)
+      const encrypt = bcrypt.hashSync(newPass, salt)
+      const setPass = {
+        user_password: encrypt
+      }
+      await changePasswordModel(setPass, id)
+      return helper.response(res, 200, 'Success change your password')
+    } catch (error) {
+      console.log(error)
       return helper.response(res, 400, 'Bad Request', error)
     }
   }
