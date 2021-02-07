@@ -5,7 +5,8 @@ const {
   getPekerjaById,
   getRecruiterById,
   deleteNotifModel,
-  patchReadStatusModel
+  patchReadStatusModel,
+  countNotifModel
 } = require('../model/hire')
 const redis = require('redis')
 const client = redis.createClient()
@@ -91,6 +92,23 @@ module.exports = {
       }
     } catch (error) {
       console.log(error)
+    }
+  },
+  countNotif: async (req, res) => {
+    try {
+      const { id } = req.params
+      const result = await countNotifModel(id)
+      console.log(result[0].total)
+      if (result[0].total === 0) {
+        return helper.response(
+          res,
+          400,
+          'There are no new notifications for you'
+        )
+      } else {
+        return helper.response(res, 200, 'You have new notification !', result)
+      }
+    } catch (error) {
       return helper.response(res, 400, 'Bad Request', error)
     }
   }

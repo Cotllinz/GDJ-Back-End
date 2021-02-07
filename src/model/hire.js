@@ -88,5 +88,19 @@ module.exports = {
         }
       )
     })
+  },
+  countNotifModel: (id) => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        `SELECT COUNT(*) AS total FROM hired_jobs WHERE id_pekerja = ${id} AND read_status = 'OFF'`,
+        (error, result) => {
+          if (!error) {
+            resolve(result)
+          } else {
+            reject(error)
+          }
+        }
+      )
+    })
   }
 }
