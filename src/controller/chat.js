@@ -22,11 +22,27 @@ module.exports = {
       const roomIdUniq = Math.floor(Math.random() * 1000000 + 1)
       const setData1 = { sender: a, receiver: b, roomIdUniq }
       const setData2 = { sender: b, receiver: a, roomIdUniq }
+      const setDataMsg = {
+        roomIdUniq,
+        sender,
+        receiver,
+        message: `Job Opportunity
+
+        Hi Dream Job seeker,
+        
+        I would like to recruit you for new opportunity, may i have your contact number for further information?
+        
+        regards,
+        Talent Acquisition
+        `
+      }
       try {
         const result1 = await createRoomModel(setData1)
         const result2 = await createRoomModel(setData2)
+        const result3 = await sendMessageModel(setDataMsg)
         return helper.response(response, 200, 'Room Created', [
           { 'room id uniq': roomIdUniq },
+          result3,
           result1,
           result2
         ])
