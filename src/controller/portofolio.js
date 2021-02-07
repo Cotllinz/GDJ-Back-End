@@ -49,6 +49,7 @@ module.exports = {
         )
       }
     } catch (error) {
+      console.log(error)
       fs.unlink(`./upload/imagePorto/${request.file.filename}`, function (err) {
         if (err) {
           return helper.response(response, 404, 'Invalid Upload Image')
@@ -138,7 +139,8 @@ module.exports = {
       id = parseInt(id)
       idPekerja = parseInt(idPekerja)
       const checkIdSeeker = await getPortofolioModel(idPekerja)
-      const checkId = await getPortofolioByIdModel(id)
+      const checkId = await getPortofolioByIdModel(idPekerja)
+      console.log(checkId)
       if (checkIdSeeker.length > 0) {
         if (checkId.length > 0) {
           const photo = await getPhotoPortofolioModel(id)
@@ -160,6 +162,7 @@ module.exports = {
         return helper.response(res, 404, 'ID Seeker is Not Found')
       }
     } catch (error) {
+      console.log(error)
       return helper.response(res, 400, 'Bad Request', error)
     }
   }

@@ -141,6 +141,7 @@ module.exports = {
         }
       }
     } catch (error) {
+      console.log(error)
       return helper.response(res, 400, 'Bad Request', error)
     }
   },
@@ -304,6 +305,7 @@ module.exports = {
         return helper.response(response, 400, "You haven't registered yet!")
       }
     } catch (error) {
+      console.log(error)
       return helper.response(response, 400, 'Bad Request!', error)
     }
   },
