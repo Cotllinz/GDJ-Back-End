@@ -4,7 +4,8 @@ const {
   notifModels,
   getPekerjaById,
   getRecruiterById,
-  deleteNotifModel
+  deleteNotifModel,
+  patchReadStatusModel
 } = require('../model/hire')
 const redis = require('redis')
 const client = redis.createClient()
@@ -53,6 +54,10 @@ module.exports = {
       const { id } = request.params
       const hireNotif = await notifModels(id)
       if (hireNotif.length > 0) {
+        const set = {
+          read_status: 'ON'
+        }
+        await patchReadStatusModel(set, id)
         client.setex(`GDJnotifById:${id}`, 1800, JSON.stringify(hireNotif))
         return helper.response(
           response,

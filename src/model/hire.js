@@ -69,5 +69,24 @@ module.exports = {
         }
       )
     })
+  },
+  patchReadStatusModel: (set, id) => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        'UPDATE hired_jobs SET ? WHERE id_pekerja = ?',
+        [set, id],
+        (error, result) => {
+          if (!error) {
+            const newResult = {
+              id_pekerja: id,
+              ...set
+            }
+            resolve(newResult)
+          } else {
+            reject(new Error(error))
+          }
+        }
+      )
+    })
   }
 }
