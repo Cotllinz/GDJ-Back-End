@@ -10,6 +10,7 @@ const {
   addPekerjaModel,
   confirmEmail,
   codeTokenCheckModel,
+  getTimeStampDiff,
   editProfilePekerjaModel,
   getProfilePekerjaModel,
   getPhotoProfilePekerjaModel,
@@ -232,18 +233,31 @@ module.exports = {
     try {
       const { token, password } = req.body
       const checkToken = await codeTokenForgotCheckModel(token)
+      console.log(checkToken + 'checktoken')
       if (checkToken.length > 0) {
-        const salt = bcrypt.genSaltSync(10)
-        const encryptPassword = bcrypt.hashSync(password, salt)
-        const setData = {
-          user_password: encryptPassword,
-          token_forgotPassword: '',
-          update_at: new Date()
+        const date = new Date()
+        const timeStampDiff = await getTimeStampDiff(date, token)
+        console.log(timeStampDiff)
+        if (timeStampDiff <= 180) { // 3 mins
+          const salt = bcrypt.genSaltSync(10)
+          const encryptPassword = bcrypt.hashSync(password, salt)
+          const setData = {
+            user_password: encryptPassword,
+            token_forgotPassword: '',
+            update_at: new Date()
+          }
+          await updatePasswordForgot(token, setData)
+          return helper.response(res, 200, 'Reset your Password Succesfully')
+        } else {
+          const setData = {
+            token_forgotPassword: '',
+            update_at: new Date()
+          }
+          await updatePasswordForgot(token, setData)
+          return helper.response(res, 400, 'Your Token is Expired')
         }
-        await updatePasswordForgot(token, setData)
-        return helper.response(res, 200, 'Reset your Password Succesfully')
       } else {
-        return helper.response(res, 400, 'Your Token Invalid')
+        return helper.response(res, 400, 'Your Token is Invalid')
       }
     } catch (err) {
       return helper.response(res, 400, 'Bad Request!', err)
