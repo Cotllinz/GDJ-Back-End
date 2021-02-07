@@ -8,8 +8,8 @@ const {
   patchReadStatusModel,
   countNotifModel
 } = require('../model/hire')
-const redis = require('redis')
-const client = redis.createClient()
+/* const redis = require('redis') */
+/* const client = redis.createClient() */
 
 module.exports = {
   hire: async (request, response) => {
@@ -59,7 +59,7 @@ module.exports = {
           read_status: 'ON'
         }
         await patchReadStatusModel(set, id)
-        client.setex(`GDJnotifById:${id}`, 1800, JSON.stringify(hireNotif))
+        /*    client.setex(`GDJnotifById:${id}`, 1800, JSON.stringify(hireNotif)) */
         return helper.response(
           response,
           200,
