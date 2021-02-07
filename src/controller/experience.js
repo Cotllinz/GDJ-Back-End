@@ -33,6 +33,11 @@ module.exports = {
   addExperience: async (req, res) => {
     try {
       const experience = req.body
+      const id = experience[0].id_pekerja
+      const cek = await getExperienceModel(id)
+      if (cek.length > 0) {
+        const result = await deleteAllModel(id)
+      }
       let resultExperience
       for (let i = 0; i < experience.length; i++) {
         const {
