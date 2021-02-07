@@ -59,6 +59,17 @@ module.exports = {
       )
     })
   },
+  getTimeStampDiff: (date, token) => {
+    return new Promise((resolve, reject) => {
+      connection.query('SELECT TIMESTAMPDIFF(SECOND, update_at, ?) AS timestampdiff FROM user_account WHERE token_forgotPassword=?', [date, token], (err, result) => {
+        if (!err) {
+          resolve(result[0].timestampdiff)
+        } else {
+          reject(err)
+        }
+      })
+    })
+  },
   updatePasswordForgot: (token, setData) => {
     return new Promise((resolve, reject) => {
       connection.query(
