@@ -59,5 +59,15 @@ module.exports = {
         }
       )
     })
+  },
+  deleteNotifModel: (id) => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        `DELETE FROM hired_jobs WHERE id_pekerja = ${id}`,
+        (error, result) => {
+          !error ? resolve(result) : reject(new Error(error))
+        }
+      )
+    })
   }
 }

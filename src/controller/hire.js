@@ -3,7 +3,8 @@ const {
   hireModel,
   notifModels,
   getPekerjaById,
-  getRecruiterById
+  getRecruiterById,
+  deleteNotifModel
 } = require('../model/hire')
 const redis = require('redis')
 const client = redis.createClient()
@@ -68,6 +69,24 @@ module.exports = {
       }
     } catch (error) {
       return helper.response(response, 400, 'Bad Request', error)
+    }
+  },
+  deleteNotif: async (req, res) => {
+    try {
+      const { id } = req.params
+      const result = await deleteNotifModel(id)
+      if (result.length == null) {
+        return helper.response(res, 200, 'Success delete Notification')
+      } else {
+        return helper.response(
+          res,
+          404,
+          `Notification with Id : ${id} Not Found`
+        )
+      }
+    } catch (error) {
+      console.log(error)
+      return helper.response(res, 400, 'Bad Request', error)
     }
   }
 }
