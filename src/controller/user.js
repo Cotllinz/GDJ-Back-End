@@ -22,7 +22,6 @@ const {
 const nodemailer = require('nodemailer')
 require('dotenv').config()
 const fs = require('fs')
-
 module.exports = {
   register: async (req, res) => {
     try {
@@ -326,21 +325,44 @@ module.exports = {
   editProfilePekerja: async (request, response) => {
     try {
       const { id } = request.params
+      const {
+        fullname_pekerja,
+        job_desk,
+        job_require,
+        city_pekerja,
+        status_jobs,
+        work_place,
+        desc_pekerja,
+        instagram,
+        linked,
+        github
+      } = request.body
       const checkProfilePekerja = await getProfilePekerjaModel(id)
-      const photo = await getPhotoProfilePekerjaModel(id)
       if (checkProfilePekerja.length > 0) {
-        const {
-          fullname_pekerja,
-          job_desk,
-          job_require,
-          city_pekerja,
-          status_jobs,
-          work_place,
-          desc_pekerja,
-          instagram,
-          linked,
-          github
-        } = request.body
+        let imageUser
+        if (request.file === undefined) {
+          imageUser = {
+            image_pekerja: checkProfilePekerja[0].image_pekerja
+          }
+        } else if (checkProfilePekerja[0].image_pekerja === '') {
+          imageUser = {
+            image_pekerja:
+              request.file === undefined ? '' : request.file.filename
+          }
+        } else if (
+          request.file.filename !== checkProfilePekerja[0].image_pekerja
+        ) {
+          fs.unlink(
+            `./upload/fileUserProfile/${checkProfilePekerja[0].image_pekerja}`,
+            (err) => {
+              if (err) throw err
+            }
+          )
+          imageUser = {
+            image_pekerja:
+              request.file === undefined ? '' : request.file.filename
+          }
+        }
         const setData = {
           id_pekerja: id,
           fullname_pekerja,
@@ -353,18 +375,10 @@ module.exports = {
           linked,
           github,
           desc_pekerja,
-          image_pekerja:
-            request.file === undefined ? photo : request.file.filename,
           update_at: new Date()
         }
-        if (setData.image_pekerja !== photo && photo !== '') {
-          fs.unlink(`./upload/fileUserProfile/${photo}`, function (err) {
-            if (err) {
-              return helper.response(response, 404, 'Add Image Invalid')
-            }
-          })
-        }
-        const result = await editProfilePekerjaModel(setData, id)
+        const setDatafull = { ...setData, ...imageUser }
+        const result = await editProfilePekerjaModel(setDatafull, id)
         return helper.response(
           response,
           200,
@@ -372,6 +386,14 @@ module.exports = {
           result
         )
       } else {
+        fs.unlink(
+          `./upload/fileUserProfile/${request.file.filename}`,
+          function (err) {
+            if (err) {
+              return helper.response(response, 404, 'Invalid Upload Image')
+            }
+          }
+        )
         return helper.response(response, 404, 'ID Not Found!')
       }
     } catch (error) {

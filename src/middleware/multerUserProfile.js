@@ -1,13 +1,15 @@
 const multer = require('multer')
-const { getProfilePekerjaModel } = require('../model/user')
 const helper = require('../helper/helper')
 
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, './upload/fileUserProfile')
+  destination: (request, file, callback) => {
+    callback(null, './upload/fileUserProfile')
   },
-  filename: function (req, file, cb) {
-    cb(null, new Date().toISOString().replace(/:/g, '-') + file.originalname)
+  filename: (request, file, callback) => {
+    callback(
+      null,
+      new Date().toISOString().replace(/:/g, '-') + '-' + file.originalname
+    )
   }
 })
 
@@ -23,28 +25,22 @@ const fileFilter = (request, file, cb) => {
     cb(new Error('Extension file must be PNG , JPEG or webp'), false)
   }
 }
-
 const maxSize = 2 * 1024 * 1024
 const upload = multer({
   storage,
   fileFilter,
-  limits: { fileSize: maxSize }
+  limits: { fieldSize: maxSize }
 }).single('files')
 
-const uploadFilter = async (req, res, next) => {
-  const { id } = req.params
-  const checkId = await getProfilePekerjaModel(id)
-  if (checkId.length > 0) {
-    upload(req, res, function (err) {
-      if (err instanceof multer.MulterError) {
-        return helper.response(res, 400, err.message)
-      } else if (err) {
-        return helper.response(res, 400, err.message)
-      }
-      next()
-    })
-  } else {
-    return helper.response(res, 404, `ID Job Seeker ${id} is Not Found`)
-  }
+const uploadFilter = (request, response, next) => {
+  upload(request, response, function (err) {
+    if (err instanceof multer.MulterError) {
+      return helper.response(response, 400, err.message)
+    } else if (err) {
+      return helper.response(response, 400, err.message)
+    }
+    next()
+  })
 }
+
 module.exports = uploadFilter
