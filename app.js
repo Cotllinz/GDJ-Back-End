@@ -19,7 +19,7 @@ app.use((request, response, next) => {
   response.header('Access-Control-Allow-Headers', 'Content-Type')
   next()
 })
-app.use('/gdj', routeNav)
+app.use('/', routeNav)
 
 app.get('*', (request, response) => {
   response.status(404).send('Path not found')
