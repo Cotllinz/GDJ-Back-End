@@ -79,7 +79,7 @@ module.exports = {
             update_at: new Date(),
             image_portofolio: req.file === undefined ? photo : req.file.filename
           }
-          if (setData.image_portofolio !== photo) {
+          if (setData.image_portofolio !== photo && photo !== '') {
             fs.unlink(`./upload/imagePorto/${photo}`, function (err) {
               if (err) {
                 return helper.response(res, 404, 'Invalid Upload Image')
