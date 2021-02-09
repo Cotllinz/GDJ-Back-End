@@ -13,7 +13,6 @@ const {
   getTimeStampDiff,
   editProfilePekerjaModel,
   getProfilePekerjaModel,
-
   updateTokenForgetPass,
   updatePasswordForgot,
   codeTokenForgotCheckModel,
@@ -326,6 +325,18 @@ module.exports = {
   editProfilePekerja: async (request, response) => {
     try {
       const { id } = request.params
+      const {
+        fullname_pekerja,
+        job_desk,
+        job_require,
+        city_pekerja,
+        status_jobs,
+        work_place,
+        desc_pekerja,
+        instagram,
+        linked,
+        github
+      } = request.body
       const checkProfilePekerja = await getProfilePekerjaModel(id)
       if (checkProfilePekerja.length > 0) {
         let imageUser
@@ -333,7 +344,7 @@ module.exports = {
           imageUser = {
             image_pekerja: checkProfilePekerja[0].image_pekerja
           }
-        } else if (checkProfilePekerja[0].image_recruiter === '') {
+        } else if (checkProfilePekerja[0].image_pekerja === '') {
           imageUser = {
             image_pekerja:
               request.file === undefined ? '' : request.file.filename
@@ -352,18 +363,7 @@ module.exports = {
               request.file === undefined ? '' : request.file.filename
           }
         }
-        const {
-          fullname_pekerja,
-          job_desk,
-          job_require,
-          city_pekerja,
-          status_jobs,
-          work_place,
-          desc_pekerja,
-          instagram,
-          linked,
-          github
-        } = request.body
+
         const setData = {
           id_pekerja: id,
           fullname_pekerja,
