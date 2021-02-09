@@ -3,10 +3,13 @@ const {
   hireModel,
   notifModels,
   getPekerjaById,
-  getRecruiterById
+  getRecruiterById,
+  deleteNotifModel,
+  patchReadStatusModel,
+  countNotifModel
 } = require('../model/hire')
-const redis = require('redis')
-const client = redis.createClient()
+/* const redis = require('redis') */
+/* const client = redis.createClient() */
 
 module.exports = {
   hire: async (request, response) => {
@@ -23,8 +26,7 @@ module.exports = {
         }
         const checkingIdPekerja = await getPekerjaById(id_pekerja)
         const checkingIdRecruiter = await getRecruiterById(id_recruiter)
-        console.log(checkingIdPekerja)
-        console.log(checkingIdRecruiter)
+
         if (checkingIdPekerja.length > 0 && checkingIdRecruiter.length > 0) {
           const result = await hireModel(setData)
           return helper.response(
@@ -52,7 +54,11 @@ module.exports = {
       const { id } = request.params
       const hireNotif = await notifModels(id)
       if (hireNotif.length > 0) {
-        client.setex(`GDJnotifById:${id}`, 1800, JSON.stringify(hireNotif))
+        const set = {
+          read_status: 'ON'
+        }
+        await patchReadStatusModel(set, id)
+        /*    client.setex(`GDJnotifById:${id}`, 1800, JSON.stringify(hireNotif)) */
         return helper.response(
           response,
           200,
@@ -68,6 +74,41 @@ module.exports = {
       }
     } catch (error) {
       return helper.response(response, 400, 'Bad Request', error)
+    }
+  },
+  deleteNotif: async (req, res) => {
+    try {
+      const { id } = req.params
+      const result = await deleteNotifModel(id)
+      if (result.length == null) {
+        return helper.response(res, 200, 'Success delete Notification')
+      } else {
+        return helper.response(
+          res,
+          404,
+          `Notification with Id : ${id} Not Found`
+        )
+      }
+    } catch (error) {
+      return helper.response(res, 400, 'Bad Request', error)
+    }
+  },
+  countNotif: async (req, res) => {
+    try {
+      const { id } = req.params
+      const result = await countNotifModel(id)
+
+      if (result[0].total === 0) {
+        return helper.response(
+          res,
+          400,
+          'There are no new notifications for you'
+        )
+      } else {
+        return helper.response(res, 200, 'You have new notification !', result)
+      }
+    } catch (error) {
+      return helper.response(res, 400, 'Bad Request', error)
     }
   }
 }

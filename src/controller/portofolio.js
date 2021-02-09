@@ -138,7 +138,8 @@ module.exports = {
       id = parseInt(id)
       idPekerja = parseInt(idPekerja)
       const checkIdSeeker = await getPortofolioModel(idPekerja)
-      const checkId = await getPortofolioByIdModel(id)
+      const checkId = await getPortofolioByIdModel(idPekerja)
+
       if (checkIdSeeker.length > 0) {
         if (checkId.length > 0) {
           const photo = await getPhotoPortofolioModel(id)
