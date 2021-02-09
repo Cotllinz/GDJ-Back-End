@@ -68,7 +68,7 @@ module.exports = {
         }
         arrResult.push(result3)
       }
-      console.log(arrResult)
+
       return helper.response(
         response,
         200,

@@ -143,7 +143,6 @@ module.exports = {
         }
       }
     } catch (error) {
-      console.log(error)
       return helper.response(res, 400, 'Bad Request', error)
     }
   },
@@ -234,11 +233,11 @@ module.exports = {
     try {
       const { token, password } = req.body
       const checkToken = await codeTokenForgotCheckModel(token)
-      console.log(checkToken + 'checktoken')
+
       if (checkToken.length > 0) {
         const date = new Date()
         const timeStampDiff = await getTimeStampDiff(date, token)
-        console.log(timeStampDiff)
+
         if (timeStampDiff <= 180) {
           // 3 mins
           const salt = bcrypt.genSaltSync(10)
@@ -321,7 +320,6 @@ module.exports = {
         return helper.response(response, 400, "You haven't registered yet!")
       }
     } catch (error) {
-      console.log(error)
       return helper.response(response, 400, 'Bad Request!', error)
     }
   },
@@ -415,7 +413,6 @@ module.exports = {
       await changePasswordModel(setPass, id)
       return helper.response(res, 200, 'Success change your password')
     } catch (error) {
-      console.log(error)
       return helper.response(res, 400, 'Bad Request', error)
     }
   }

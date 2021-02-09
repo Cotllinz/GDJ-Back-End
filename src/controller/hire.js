@@ -26,8 +26,7 @@ module.exports = {
         }
         const checkingIdPekerja = await getPekerjaById(id_pekerja)
         const checkingIdRecruiter = await getRecruiterById(id_recruiter)
-        console.log(checkingIdPekerja)
-        console.log(checkingIdRecruiter)
+
         if (checkingIdPekerja.length > 0 && checkingIdRecruiter.length > 0) {
           const result = await hireModel(setData)
           return helper.response(
@@ -91,14 +90,14 @@ module.exports = {
         )
       }
     } catch (error) {
-      console.log(error)
+      return helper.response(res, 400, 'Bad Request', error)
     }
   },
   countNotif: async (req, res) => {
     try {
       const { id } = req.params
       const result = await countNotifModel(id)
-      console.log(result[0].total)
+
       if (result[0].total === 0) {
         return helper.response(
           res,
