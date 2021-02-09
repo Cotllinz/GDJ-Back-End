@@ -180,22 +180,25 @@ module.exports = {
       for (let i = 0; i < result.length; i++) {
         result[i].skills = await getSkill(result[i].id_pekerja)
       }
-      const newData = {
-        result,
-        newPage
+      console.log(result[0].skills)
+      if (result.skills.length > 1) {
+        const newData = {
+          result,
+          newPage
+        }
+        client.setex(
+          `GDJdatabylimit:${JSON.stringify(req.query)}`,
+          1800,
+          JSON.stringify(newData)
+        )
+        return helper.response(
+          res,
+          200,
+          'Succes get data pekerja',
+          result,
+          newPage
+        )
       }
-      client.setex(
-        `GDJdatabylimit:${JSON.stringify(req.query)}`,
-        1800,
-        JSON.stringify(newData)
-      )
-      return helper.response(
-        res,
-        200,
-        'Succes get data pekerja',
-        result,
-        newPage
-      )
     } catch (err) {
       return helper.response(res, 400, 'Bad Request', err)
     }

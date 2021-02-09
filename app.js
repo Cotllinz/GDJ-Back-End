@@ -51,15 +51,11 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('chatMessage', data)
   })
   socket.on('joinRoom', (data) => {
-    console.log('joinRoom ')
     console.log(data)
-
     socket.join(data.room)
   })
   socket.on('changeRoom', (data) => {
-    console.log('changeRoom ')
     console.log(data)
-
     socket.leave(data.oldRoom)
     socket.join(data.room)
   })
