@@ -13,7 +13,7 @@ const {
   getTimeStampDiff,
   editProfilePekerjaModel,
   getProfilePekerjaModel,
-  getPhotoProfilePekerjaModel,
+
   updateTokenForgetPass,
   updatePasswordForgot,
   codeTokenForgotCheckModel,
@@ -327,8 +327,31 @@ module.exports = {
     try {
       const { id } = request.params
       const checkProfilePekerja = await getProfilePekerjaModel(id)
-      const photo = await getPhotoProfilePekerjaModel(id)
       if (checkProfilePekerja.length > 0) {
+        let imageUser
+        if (request.file === undefined) {
+          imageUser = {
+            image_pekerja: checkProfilePekerja[0].image_pekerja
+          }
+        } else if (checkProfilePekerja[0].image_recruiter === '') {
+          imageUser = {
+            image_pekerja:
+              request.file === undefined ? '' : request.file.filename
+          }
+        } else if (
+          request.file.filename !== checkProfilePekerja[0].image_pekerja
+        ) {
+          fs.unlink(
+            `./upload/fileUserProfile/${checkProfilePekerja[0].image_pekerja}`,
+            (err) => {
+              if (err) throw err
+            }
+          )
+          imageUser = {
+            image_pekerja:
+              request.file === undefined ? '' : request.file.filename
+          }
+        }
         const {
           fullname_pekerja,
           job_desk,
@@ -353,18 +376,10 @@ module.exports = {
           linked,
           github,
           desc_pekerja,
-          image_pekerja:
-            request.file === undefined ? photo : request.file.filename,
           update_at: new Date()
         }
-        if (setData.image_pekerja !== photo && photo !== '') {
-          fs.unlink(`./upload/fileUserProfile/${photo}`, function (err) {
-            if (err) {
-              return helper.response(response, 404, 'Add Image Invalid')
-            }
-          })
-        }
-        const result = await editProfilePekerjaModel(setData, id)
+        const setProfileImage = { ...setData, ...imageUser }
+        const result = await editProfilePekerjaModel(setProfileImage, id)
         return helper.response(
           response,
           200,
@@ -372,6 +387,12 @@ module.exports = {
           result
         )
       } else {
+        fs.unlink(
+          `./upload/fileUserProfile/${request.file.filename}`,
+          (err) => {
+            if (err) throw err
+          }
+        )
         return helper.response(response, 404, 'ID Not Found!')
       }
     } catch (error) {
