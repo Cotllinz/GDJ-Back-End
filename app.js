@@ -30,7 +30,8 @@ const server = http.createServer(app)
 const io = socket(server, {
   cors: {
     origin: '*'
-  }
+  },
+  path: '/gdj/socket.io'
 })
 io.on('connection', (socket) => {
   console.log('Socket.io Connect !')
