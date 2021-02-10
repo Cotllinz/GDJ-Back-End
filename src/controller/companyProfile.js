@@ -59,7 +59,7 @@ module.exports = {
           imageUser = {
             image_recruiter: getRec[0].image_recruiter
           }
-        } else if (getRec[0].image_recruiter === '') {
+        } else if (getRec[0].image_recruiter === null) {
           imageUser = {
             image_recruiter:
               request.file === undefined ? '' : request.file.filename
